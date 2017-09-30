@@ -53,6 +53,9 @@
 /* Example/Board Header files */
 #include "Board.h"
 
+/*constant Value*/
+#define     arrayLength     2
+
 /* Pin driver handles */
 static PIN_Handle VcPinHandle;
 static PIN_Handle switchandledPinHandle;
@@ -64,10 +67,14 @@ static PIN_State buttonPinState;
 static PIN_State ledPinState;
 
 /* Switch Array */
-static int arrayLength = 2;
-static int charge[2] = {Board_DIO24_ANALOG, Board_DIO25_ANALOG};
+
+static int charge[arrayLength] = {Board_DIO24_ANALOG, Board_DIO25_ANALOG};
 static int index = 0;
 
+static uint32_t start = 0;
+static uint32_t stop = 0;
+static double result[arrayLength] = {0.0,0.0};
+static double time_ratio = 0;
 /*
  * Initial LED pin configuration table
  *   - LEDs Board_LED0 is on.
@@ -88,6 +95,7 @@ PIN_Config VcPinTable[] = {
     Board_DIO23_ANALOG | PIN_INPUT_EN | PIN_IRQ_NEGEDGE,
     PIN_TERMINATE
 };
+
 
 
 /*
@@ -130,6 +138,8 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
     if ( pinId == Board_DIO23_ANALOG && PIN_getInputValue(pinId)){
         //disable switch pin
         switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 0);
+        stop = Timestamp_get32();
+
         if (switchStatus) {
             System_abort("Error disabling charging switch switch\n");
         }
@@ -137,8 +147,14 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
         if (switchStatus) {
             System_abort("Error enabling discharge switch pin26\n");
         }
+        result[index] = stop - start;
 
-        CPUdelay(8000*50);
+        if(index > 0){
+            time_ratio = result[0]/result[index];
+//            printf("time ratio: %f\n", time_ratio);
+
+        }
+        CPUdelay(800*50);
 
         switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO26_ANALOG, 0);
         if (switchStatus) {
@@ -149,6 +165,7 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
 
         //Start Charging
         switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 1);
+        start = Timestamp_get32();
 //        CPUdelay(80000*50);
         if (switchStatus) {
             System_abort("Error enabling next charging switch switch\n");
@@ -162,6 +179,9 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
  */
 int main(void)
 {
+
+
+
     /* Call board init functions */
     Board_initGeneral();
 
@@ -184,6 +204,26 @@ int main(void)
     if (switchStatus) {
         System_abort("Error initially enabling pin24\n");
     }
+
+    // start timer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //    CPUdelay(800000*50);
 
