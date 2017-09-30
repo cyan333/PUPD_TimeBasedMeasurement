@@ -17,13 +17,6 @@ ccfg.obj: ../ccfg.c $(GEN_OPTS) | $(GEN_HDRS)
 	@echo 'Finished building: $<'
 	@echo ' '
 
-pinInterrupt.obj: ../pinInterrupt.c $(GEN_OPTS) | $(GEN_HDRS)
-	@echo 'Building file: $<'
-	@echo 'Invoking: ARM Compiler'
-	"/Applications/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.4.LTS/bin/armcl" -mv7M3 --code_state=16 --float_support=vfplib -me --include_path="/Users/Fangming/Documents/PUPD_Project/uC/PUPD_TimeBasedMeasurement" --include_path="/Users/Fangming/Documents/PUPD_Project/uC/PUPD_TimeBasedMeasurement" --include_path="/Users/Fangming/ti/tirtos_cc13xx_cc26xx_2_21_00_06/products/cc26xxware_2_24_03_17272" --include_path="/Applications/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.4.LTS/include" --define=ccs -g --diag_warning=225 --diag_warning=255 --diag_wrap=off --display_error_number --gen_func_subsections=on --abi=eabi --preproc_with_compile --preproc_dependency="pinInterrupt.d_raw" $(GEN_OPTS__FLAG) "$<"
-	@echo 'Finished building: $<'
-	@echo ' '
-
 build-1953169199:
 	@$(MAKE) -Onone -f subdir_rules.mk build-1953169199-inproc
 
@@ -37,5 +30,12 @@ build-1953169199-inproc: ../pinInterrupt.cfg
 configPkg/linker.cmd: build-1953169199 ../pinInterrupt.cfg
 configPkg/compiler.opt: build-1953169199
 configPkg/: build-1953169199
+
+timeBasedMeas.obj: ../timeBasedMeas.c $(GEN_OPTS) | $(GEN_HDRS)
+	@echo 'Building file: $<'
+	@echo 'Invoking: ARM Compiler'
+	"/Applications/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.4.LTS/bin/armcl" -mv7M3 --code_state=16 --float_support=vfplib -me --include_path="/Users/Fangming/Documents/PUPD_Project/uC/PUPD_TimeBasedMeasurement" --include_path="/Users/Fangming/Documents/PUPD_Project/uC/PUPD_TimeBasedMeasurement" --include_path="/Users/Fangming/ti/tirtos_cc13xx_cc26xx_2_21_00_06/products/cc26xxware_2_24_03_17272" --include_path="/Applications/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.4.LTS/include" --define=ccs -g --diag_warning=225 --diag_warning=255 --diag_wrap=off --display_error_number --gen_func_subsections=on --abi=eabi --preproc_with_compile --preproc_dependency="timeBasedMeas.d_raw" $(GEN_OPTS__FLAG) "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
 
 

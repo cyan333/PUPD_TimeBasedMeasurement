@@ -10,7 +10,7 @@ GEN_CMDS__FLAG := -l"configPkg/linker.cmd"
 ORDERED_OBJS += \
 "./CC2650_LAUNCHXL.obj" \
 "./ccfg.obj" \
-"./pinInterrupt.obj" \
+"./timeBasedMeas.obj" \
 "../CC2650_LAUNCHXL.cmd" \
 $(GEN_CMDS__FLAG) \
 -l"/Users/Fangming/ti/tirtos_cc13xx_cc26xx_2_21_00_06/products/cc26xxware_2_24_03_17272/driverlib/bin/ccs/driverlib.lib" \
@@ -155,8 +155,8 @@ PUPD_timeBased.hex: $(EXE_OUTPUTS)
 clean:
 	-$(RM) $(GEN_CMDS__QUOTED)$(GEN_MISC_FILES__QUOTED)$(BIN_OUTPUTS__QUOTED)$(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)$(GEN_OPTS__QUOTED)
 	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
-	-$(RM) "CC2650_LAUNCHXL.obj" "ccfg.obj" "pinInterrupt.obj" 
-	-$(RM) "CC2650_LAUNCHXL.d" "ccfg.d" "pinInterrupt.d" 
+	-$(RM) "CC2650_LAUNCHXL.obj" "ccfg.obj" "timeBasedMeas.obj" 
+	-$(RM) "CC2650_LAUNCHXL.d" "ccfg.d" "timeBasedMeas.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
