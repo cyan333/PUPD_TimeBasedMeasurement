@@ -41,6 +41,8 @@
 #include <xdc/runtime/Types.h>
 #include <ti/sysbios/BIOS.h>
 
+#include <ti/sysbios/knl/Task.h>
+
 /* BIOS Header files */
 #include <ti/sysbios/BIOS.h>
 #include <ti/drivers/Power.h>
@@ -135,11 +137,19 @@ PIN_Config buttonPinTable[] = {
 
 void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
 
-    if ( pinId == Board_DIO23_ANALOG && PIN_getInputValue(pinId)){
-        //disable switch pin
-        switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 0);
-        stop = Timestamp_get32();
 
+    stop = Timestamp_get32();
+    CPUdelay(80*50);
+//    Task_sleep(100*10/Clock_tickPeriod);
+    //printf("enabled \n");
+    if ( pinId == Board_DIO23_ANALOG && PIN_getInputValue(pinId)){
+//        CPUdelay(8000*50);
+        //disable switch pin
+//        stop = Timestamp_get32();
+        switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 0);
+
+
+//        CPUdelay(8000*50);
         if (switchStatus) {
             System_abort("Error disabling charging switch switch\n");
         }
@@ -151,7 +161,7 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
 
         if(index > 0){
             time_ratio = result[0]/result[index];
-//            printf("time ratio: %f\n", time_ratio);
+            printf("%f\n", time_ratio);
 
         }
         CPUdelay(800*50);
@@ -160,16 +170,17 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
         if (switchStatus) {
             System_abort("Error disabling discharge switch pin26\n");
         }
+//        CPUdelay(8000*50);
 
         index = (index+1) % arrayLength; //01010101 / 012012012
 
         //Start Charging
         switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 1);
         start = Timestamp_get32();
-//        CPUdelay(80000*50);
         if (switchStatus) {
             System_abort("Error enabling next charging switch switch\n");
         }
+
     }
 
 }
