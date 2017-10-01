@@ -94,21 +94,10 @@ PIN_Config switchPinTable[] = {
 
 
 PIN_Config VcPinTable[] = {
-    Board_DIO23_ANALOG | PIN_INPUT_EN | PIN_IRQ_NEGEDGE,
+    Board_DIO23_ANALOG | PIN_INPUT_EN | PIN_IRQ_POSEDGE,
     PIN_TERMINATE
 };
 
-
-
-/*
- * Application button pin configuration table:
- *   - Buttons interrupts are configured to trigger on falling edge.
- */
-PIN_Config buttonPinTable[] = {
-    Board_BUTTON0  | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_NEGEDGE,
-    Board_BUTTON1  | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_NEGEDGE,
-    PIN_TERMINATE
-};
 
 /*
  *  ======== buttonCallbackFxn ========
@@ -139,7 +128,8 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
 
 
     stop = Timestamp_get32();
-    CPUdelay(80*50);
+
+    //CPUdelay(80*50);
 //    Task_sleep(100*10/Clock_tickPeriod);
     //printf("enabled \n");
     if ( pinId == Board_DIO23_ANALOG && PIN_getInputValue(pinId)){
@@ -212,6 +202,7 @@ int main(void)
     }
 
     switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO24_ANALOG, 1);
+    start = Timestamp_get32();
     if (switchStatus) {
         System_abort("Error initially enabling pin24\n");
     }
