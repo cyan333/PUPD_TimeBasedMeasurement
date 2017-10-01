@@ -1,7 +1,7 @@
 ******************************************************************************
                   TI ARM Linker Unix v16.9.4                   
 ******************************************************************************
->> Linked Sun Oct  1 15:16:55 2017
+>> Linked Sun Oct  1 17:31:19 2017
 
 OUTPUT FILE NAME:   <PUPD_timeBased.out>
 ENTRY POINT SYMBOL: "ResetISR"  address: 00004c89
@@ -423,11 +423,10 @@ section   page    origin      length       input sections
 .cinit     0    00005c10    000002b0     
                   00005c10    00000176     (.cinit..data.load) [load image, compression = lzss]
                   00005d86    00000028     (.cinit..data:ti_sysbios_family_arm_m3_Hwi_Module__state__V.load) [load image, compression = lzss]
-                  00005dae    00000021     (.cinit..data:ti_sysbios_knl_Task_Module__state__V.load) [load image, compression = lzss]
-                  00005dcf    0000001f     (.cinit..data:ti_sysbios_BIOS_Module__state__V.load) [load image, compression = lzss]
-                  00005dee    0000001d     (.cinit..data:ti_sysbios_knl_Clock_Module__state__V.load) [load image, compression = lzss]
-                  00005e0b    0000000e     (.cinit..data:ti_sysbios_knl_Swi_Module__state__V.load) [load image, compression = lzss]
-                  00005e19    00000003     --HOLE-- [fill = 0]
+                  00005dae    00000022     (.cinit..data:ti_sysbios_BIOS_Module__state__V.load) [load image, compression = lzss]
+                  00005dd0    00000021     (.cinit..data:ti_sysbios_knl_Task_Module__state__V.load) [load image, compression = lzss]
+                  00005df1    0000001d     (.cinit..data:ti_sysbios_knl_Clock_Module__state__V.load) [load image, compression = lzss]
+                  00005e0e    0000000e     (.cinit..data:ti_sysbios_knl_Swi_Module__state__V.load) [load image, compression = lzss]
                   00005e1c    0000000c     (__TI_handler_table)
                   00005e28    0000000b     (.cinit..data:ti_sysbios_family_arm_cc26xx_Timer_Module__state__V.load) [load image, compression = lzss]
                   00005e33    0000000b     (.cinit..data:xdc_runtime_System_Module__state__V.load) [load image, compression = lzss]
@@ -1173,9 +1172,9 @@ MODULE SUMMARY
        Total:                            212     0         0      
                                                                   
        Stack:                            0       0         768    
-       Linker Generated:                 336     681       0      
+       Linker Generated:                 336     684       0      
     +--+---------------------------------+-------+---------+---------+
-       Grand Total:                      21470   2645      5252   
+       Grand Total:                      21470   2648      5252   
 
 
 LINKER GENERATED COPY TABLES
@@ -1183,10 +1182,10 @@ LINKER GENERATED COPY TABLES
 __TI_cinit_table @ 00005e60 records: 12, size/record: 8, table size: 96
 	.data: load addr=00005c10, load size=00000176 bytes, run addr=20000c68, run size=0000055a bytes, compression=lzss
 	.data:ti_sysbios_family_arm_m3_Hwi_Module__state__V: load addr=00005d86, load size=00000028 bytes, run addr=20000144, run size=00000034 bytes, compression=lzss
-	.data:ti_sysbios_knl_Task_Module__state__V: load addr=00005dae, load size=00000021 bytes, run addr=20000100, run size=00000044 bytes, compression=lzss
-	.data:ti_sysbios_BIOS_Module__state__V: load addr=00005dcf, load size=0000001f bytes, run addr=200001a4, run size=00000024 bytes, compression=lzss
-	.data:ti_sysbios_knl_Clock_Module__state__V: load addr=00005dee, load size=0000001d bytes, run addr=20000178, run size=0000002c bytes, compression=lzss
-	.data:ti_sysbios_knl_Swi_Module__state__V: load addr=00005e0b, load size=0000000e bytes, run addr=200001c8, run size=0000001c bytes, compression=lzss
+	.data:ti_sysbios_BIOS_Module__state__V: load addr=00005dae, load size=00000022 bytes, run addr=200001a4, run size=00000024 bytes, compression=lzss
+	.data:ti_sysbios_knl_Task_Module__state__V: load addr=00005dd0, load size=00000021 bytes, run addr=20000100, run size=00000044 bytes, compression=lzss
+	.data:ti_sysbios_knl_Clock_Module__state__V: load addr=00005df1, load size=0000001d bytes, run addr=20000178, run size=0000002c bytes, compression=lzss
+	.data:ti_sysbios_knl_Swi_Module__state__V: load addr=00005e0e, load size=0000000e bytes, run addr=200001c8, run size=0000001c bytes, compression=lzss
 	.data:ti_sysbios_family_arm_cc26xx_Timer_Module__state__V: load addr=00005e28, load size=0000000b bytes, run addr=200001e4, run size=00000008 bytes, compression=lzss
 	.data:xdc_runtime_System_Module__state__V: load addr=00005e33, load size=0000000b bytes, run addr=200001f8, run size=00000008 bytes, compression=lzss
 	.bss: load addr=00005e40, load size=00000008 bytes, run addr=20000208, run size=00000a60 bytes, compression=zero_init
@@ -1320,8 +1319,8 @@ ti_sysbios_knl_Semaphore_Params__init__S  $Tramp$TT$L$PI$$ti_sysbios_knl_Semapho
 xdc_runtime_System_abort__E  $Tramp$TT$L$PI$$xdc_runtime_System_abort__E
    1001c749     000059a4     00001d54   timeBasedMeas.obj (.text:dischargeCallbackFxn)
                              00001d70   timeBasedMeas.obj (.text:dischargeCallbackFxn)
-                             00001de0   timeBasedMeas.obj (.text:dischargeCallbackFxn)
-                             00001e20   timeBasedMeas.obj (.text:dischargeCallbackFxn)
+                             00001dde   timeBasedMeas.obj (.text:dischargeCallbackFxn)
+                             00001e1e   timeBasedMeas.obj (.text:dischargeCallbackFxn)
                              00002794   timeBasedMeas.obj (.text:main)
                              000027ac   timeBasedMeas.obj (.text:main)
                              000027c4   timeBasedMeas.obj (.text:main)
@@ -1329,7 +1328,7 @@ xdc_runtime_System_abort__E  $Tramp$TT$L$PI$$xdc_runtime_System_abort__E
                              000027fa   timeBasedMeas.obj (.text:main)
 xdc_runtime_Timestamp_get32__E  $Tramp$TT$L$PI$$xdc_runtime_Timestamp_get32__E
    1001c831     000059ac     00001d18   timeBasedMeas.obj (.text:dischargeCallbackFxn)
-                             00001e10   timeBasedMeas.obj (.text:dischargeCallbackFxn)
+                             00001e0e   timeBasedMeas.obj (.text:dischargeCallbackFxn)
                              000027ea   timeBasedMeas.obj (.text:main)
 ti_sysbios_knl_Task_restore__E  $Tramp$TT$L$PI$$ti_sysbios_knl_Task_restore__E
    1001ba49     000059b4     000018d8   drivers_cc26xxware.aem3 : PowerCC26XX.oem3 (.text:Power_sleep)

@@ -43,6 +43,13 @@
 
 #include <ti/sysbios/knl/Task.h>
 
+#include <ti/sysbios/family/arm/lm4/Timer.h>
+
+//#include <ti/sysbios/family/arm/cc26xx/TimestampProvider.h>
+#include <ti/sysbios/family/arm/m3/TimestampProvider.h>
+
+
+
 /* BIOS Header files */
 #include <ti/sysbios/BIOS.h>
 #include <ti/drivers/Power.h>
@@ -126,16 +133,18 @@ PIN_Config VcPinTable[] = {
 
 void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
 
-
     stop = Timestamp_get32();
+//    printf("clock tick end: %d\n", Clock_getTicks());
+//    stop = Timestamp_get32();
 
-    //CPUdelay(80*50);
+//    CPUdelay(8*50);
 //    Task_sleep(100*10/Clock_tickPeriod);
     //printf("enabled \n");
     if ( pinId == Board_DIO23_ANALOG && PIN_getInputValue(pinId)){
 //        CPUdelay(8000*50);
         //disable switch pin
-//        stop = Timestamp_get32();
+
+
         switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 0);
 
 
@@ -154,7 +163,7 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
             printf("%f\n", time_ratio);
 
         }
-        CPUdelay(800*50);
+        CPUdelay(80000*50);
 
         switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO26_ANALOG, 0);
         if (switchStatus) {
@@ -167,6 +176,7 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
         //Start Charging
         switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 1);
         start = Timestamp_get32();
+//        printf("clock tick start: %d\n", Clock_getTicks());
         if (switchStatus) {
             System_abort("Error enabling next charging switch switch\n");
         }
