@@ -47,6 +47,8 @@
 #include <ti/sysbios/family/arm/m3/Hwi.h>
 #include <ti/sysbios/family/arm/m3/IntrinsicsSupport.h>
 #include <ti/sysbios/family/arm/m3/TaskSupport.h>
+#include <ti/sysbios/family/arm/m3/Timer.h>
+#include <ti/sysbios/family/arm/m3/TimestampProvider.h>
 #include <ti/sysbios/gates/GateHwi.h>
 #include <ti/sysbios/gates/GateMutex.h>
 #include <ti/sysbios/hal/Hwi.h>
@@ -249,6 +251,53 @@ typedef struct {
 
 /*
  * ======== ti.sysbios.family.arm.m3.TaskSupport INTERNALS ========
+ */
+
+
+/*
+ * ======== ti.sysbios.family.arm.m3.Timer INTERNALS ========
+ */
+
+/* Module__ */
+typedef struct ti_sysbios_family_arm_m3_Timer_Module__ {
+    xdc_runtime_Types_Link link;
+} ti_sysbios_family_arm_m3_Timer_Module__;
+
+/* Module__root__V */
+extern ti_sysbios_family_arm_m3_Timer_Module__ ti_sysbios_family_arm_m3_Timer_Module__root__V;
+
+/* Object__ */
+typedef struct ti_sysbios_family_arm_m3_Timer_Object__ {
+    const ti_sysbios_family_arm_m3_Timer_Fxns__ *__fxns;
+    xdc_Bool staticInst;
+    xdc_Int id;
+    ti_sysbios_family_arm_m3_Timer_RunMode runMode;
+    ti_sysbios_family_arm_m3_Timer_StartMode startMode;
+    xdc_UInt period;
+    ti_sysbios_family_arm_m3_Timer_PeriodType periodType;
+    xdc_UInt intNum;
+    xdc_UArg arg;
+    ti_sysbios_family_arm_m3_Hwi_FuncPtr tickFxn;
+    xdc_runtime_Types_FreqHz extFreq;
+    ti_sysbios_family_arm_m3_Hwi_Handle hwi;
+} ti_sysbios_family_arm_m3_Timer_Object__;
+
+/* Object2__ */
+typedef struct {
+    xdc_runtime_Types_InstHdr hdr;
+    ti_sysbios_family_arm_m3_Timer_Object__ obj;
+} ti_sysbios_family_arm_m3_Timer_Object2__;
+
+/* __ParamsPtr */
+#ifdef ti_sysbios_family_arm_m3_Timer___VERS
+    #define ti_sysbios_family_arm_m3_Timer___ParamsPtr xdc_UChar*
+#else
+    #define ti_sysbios_family_arm_m3_Timer___ParamsPtr xdc_Ptr
+#endif
+
+
+/*
+ * ======== ti.sysbios.family.arm.m3.TimestampProvider INTERNALS ========
  */
 
 
@@ -988,7 +1037,7 @@ const ti_sysbios_gates_GateHwi_Fxns__ ti_sysbios_gates_GateHwi_Module__FXNS__C =
         ti_sysbios_gates_GateHwi_Object__create__S,
         ti_sysbios_gates_GateHwi_Object__delete__S,
         ti_sysbios_gates_GateHwi_Handle__label__S,
-        0x2e, /* __mid */
+        0x30, /* __mid */
     } /* __sfxns */
 };
 
@@ -1009,7 +1058,7 @@ const ti_sysbios_gates_GateMutex_Fxns__ ti_sysbios_gates_GateMutex_Module__FXNS_
         ti_sysbios_gates_GateMutex_Object__create__S,
         ti_sysbios_gates_GateMutex_Object__delete__S,
         ti_sysbios_gates_GateMutex_Handle__label__S,
-        0x2f, /* __mid */
+        0x31, /* __mid */
     } /* __sfxns */
 };
 
@@ -1031,7 +1080,7 @@ const ti_sysbios_heaps_HeapMem_Fxns__ ti_sysbios_heaps_HeapMem_Module__FXNS__C =
         ti_sysbios_heaps_HeapMem_Object__create__S,
         ti_sysbios_heaps_HeapMem_Object__delete__S,
         ti_sysbios_heaps_HeapMem_Handle__label__S,
-        0x30, /* __mid */
+        0x32, /* __mid */
     } /* __sfxns */
 };
 
@@ -1174,7 +1223,7 @@ ti_sysbios_family_arm_cc26xx_TimestampProvider_Module_State__ ti_sysbios_family_
  */
 
 /* Object__table__V */
-ti_sysbios_family_arm_m3_Hwi_Object__ ti_sysbios_family_arm_m3_Hwi_Object__table__V[1];
+ti_sysbios_family_arm_m3_Hwi_Object__ ti_sysbios_family_arm_m3_Hwi_Object__table__V[2];
 
 /* Module_State__ */
 typedef struct ti_sysbios_family_arm_m3_Hwi_Module_State__ {
@@ -1235,6 +1284,37 @@ extern xdc_Void ti_sysbios_knl_Task_restoreHwi__E(xdc_UInt);
 /*
  * ======== ti.sysbios.family.arm.m3.TaskSupport DECLARATIONS ========
  */
+
+
+/*
+ * ======== ti.sysbios.family.arm.m3.Timer DECLARATIONS ========
+ */
+
+/* Object__table__V */
+ti_sysbios_family_arm_m3_Timer_Object__ ti_sysbios_family_arm_m3_Timer_Object__table__V[1];
+
+/* Module_State__ */
+typedef struct ti_sysbios_family_arm_m3_Timer_Module_State__ {
+    volatile xdc_UInt tickCount;
+    xdc_UInt availMask;
+    ti_sysbios_family_arm_m3_Timer_Handle handle;
+} ti_sysbios_family_arm_m3_Timer_Module_State__;
+
+/* Module__state__V */
+ti_sysbios_family_arm_m3_Timer_Module_State__ ti_sysbios_family_arm_m3_Timer_Module__state__V;
+
+
+/*
+ * ======== ti.sysbios.family.arm.m3.TimestampProvider DECLARATIONS ========
+ */
+
+/* Module_State__ */
+typedef struct ti_sysbios_family_arm_m3_TimestampProvider_Module_State__ {
+    ti_sysbios_family_arm_m3_Timer_Handle timer;
+} ti_sysbios_family_arm_m3_TimestampProvider_Module_State__;
+
+/* Module__state__V */
+ti_sysbios_family_arm_m3_TimestampProvider_Module_State__ ti_sysbios_family_arm_m3_TimestampProvider_Module__state__V;
 
 
 /*
@@ -1572,6 +1652,9 @@ extern xdc_Void ti_sysbios_hal_Hwi_initStack(xdc_Void);
 /* --> xdc_runtime_Startup_firstFxns__A */
 const __T1_xdc_runtime_Startup_firstFxns xdc_runtime_Startup_firstFxns__A[3];
 
+/* --> xdc_runtime_Startup_lastFxns__A */
+const __T1_xdc_runtime_Startup_lastFxns xdc_runtime_Startup_lastFxns__A[1];
+
 /* --> xdc_runtime_System_Module_startup__E */
 extern xdc_Int xdc_runtime_System_Module_startup__E(xdc_Int);
 
@@ -1593,6 +1676,12 @@ extern xdc_Int ti_sysbios_knl_Task_Module_startup__E(xdc_Int);
 /* --> ti_sysbios_family_arm_m3_Hwi_Module_startup__E */
 extern xdc_Int ti_sysbios_family_arm_m3_Hwi_Module_startup__E(xdc_Int);
 
+/* --> ti_sysbios_family_arm_m3_Timer_Module_startup__E */
+extern xdc_Int ti_sysbios_family_arm_m3_Timer_Module_startup__E(xdc_Int);
+
+/* --> ti_sysbios_family_arm_m3_TimestampProvider_Module_startup__E */
+extern xdc_Int ti_sysbios_family_arm_m3_TimestampProvider_Module_startup__E(xdc_Int);
+
 /* --> ti_sysbios_family_arm_cc26xx_Timer_Module_startup__E */
 extern xdc_Int ti_sysbios_family_arm_cc26xx_Timer_Module_startup__E(xdc_Int);
 
@@ -1603,10 +1692,10 @@ extern xdc_Int ti_sysbios_family_arm_cc26xx_TimestampProvider_Module_startup__E(
 extern xdc_Int ti_sysbios_hal_Hwi_Module_startup__E(xdc_Int);
 
 /* --> xdc_runtime_Startup_sfxnTab__A */
-const __T1_xdc_runtime_Startup_sfxnTab xdc_runtime_Startup_sfxnTab__A[10];
+const __T1_xdc_runtime_Startup_sfxnTab xdc_runtime_Startup_sfxnTab__A[12];
 
 /* --> xdc_runtime_Startup_sfxnRts__A */
-const __T1_xdc_runtime_Startup_sfxnRts xdc_runtime_Startup_sfxnRts__A[10];
+const __T1_xdc_runtime_Startup_sfxnRts xdc_runtime_Startup_sfxnRts__A[12];
 
 
 /*
@@ -1837,6 +1926,12 @@ xdc__META(__TRDR__, "@(#)__TRDR__ = ti.targets.omf.elf.Elf32");
 xdc_Bool xdc_runtime_SysMin_Module__startupDone__F(void) {
     return (&xdc_runtime_Startup_Module__state__V)->stateTab == 0 || (&xdc_runtime_Startup_Module__state__V)->stateTab[1] < 0;
 }
+xdc_Bool ti_sysbios_family_arm_m3_Timer_Module__startupDone__F(void) {
+    return (&xdc_runtime_Startup_Module__state__V)->stateTab == 0 || (&xdc_runtime_Startup_Module__state__V)->stateTab[7] < 0;
+}
+xdc_Bool ti_sysbios_family_arm_m3_TimestampProvider_Module__startupDone__F(void) {
+    return (&xdc_runtime_Startup_Module__state__V)->stateTab == 0 || (&xdc_runtime_Startup_Module__state__V)->stateTab[8] < 0;
+}
 
 
 xdc_Int xdc_runtime_Startup_getState__I(xdc_runtime_Types_ModuleId id) {
@@ -1853,12 +1948,12 @@ xdc_Int xdc_runtime_Startup_getState__I(xdc_runtime_Types_ModuleId id) {
             return ((&xdc_runtime_Startup_Module__state__V)->stateTab[5]);
         case 37:
             return ((&xdc_runtime_Startup_Module__state__V)->stateTab[6]);
-        case 41:
-            return ((&xdc_runtime_Startup_Module__state__V)->stateTab[7]);
-        case 42:
-            return ((&xdc_runtime_Startup_Module__state__V)->stateTab[8]);
         case 43:
             return ((&xdc_runtime_Startup_Module__state__V)->stateTab[9]);
+        case 44:
+            return ((&xdc_runtime_Startup_Module__state__V)->stateTab[10]);
+        case 45:
+            return ((&xdc_runtime_Startup_Module__state__V)->stateTab[11]);
     }
     return (0);
 }
@@ -1885,8 +1980,8 @@ xdc_Void xdc_runtime_Startup_exec__I(void) __attribute__ ((externally_visible));
  */
 xdc_Void xdc_runtime_Startup_exec__I(void)
 {
-    xdc_Int state[10];
-    xdc_runtime_Startup_startModsFxn__C(state, 10);
+    xdc_Int state[12];
+    xdc_runtime_Startup_startModsFxn__C(state, 12);
 }
 
 /*
@@ -2185,6 +2280,7 @@ Void ti_sysbios_knl_Clock_doTick__I(UArg arg)
 Void ti_sysbios_BIOS_atExitFunc__I(Int);
 
 extern Void ti_sysbios_BIOS_registerRTSLock();
+extern Void ti_sysbios_family_arm_m3_Timer_startup__E();
 extern Void ti_sysbios_family_arm_cc26xx_Timer_startup__E();
 
 Void ti_sysbios_BIOS_startFunc__I()
@@ -2201,6 +2297,7 @@ Void ti_sysbios_BIOS_startFunc__I()
     xdc_runtime_System_atexit(
         (xdc_runtime_System_AtexitHandler)ti_sysbios_BIOS_atExitFunc__I);
     ti_sysbios_BIOS_registerRTSLock();
+    ti_sysbios_family_arm_m3_Timer_startup__E();
     ti_sysbios_family_arm_cc26xx_Timer_startup__E();
     ti_sysbios_hal_Hwi_startup();
     ti_sysbios_knl_Swi_startup();
@@ -2465,6 +2562,8 @@ xdc_Void * const ti_sysbios_rom_ROM_xdc_runtime_System_SupportProxy_ready__E = (
 #pragma DATA_SECTION(ti_sysbios_knl_Task_Module__state__V, ".data:ti_sysbios_knl_Task_Module__state__V");
 #pragma DATA_SECTION(ti_sysbios_BIOS_Module__state__V, ".data:ti_sysbios_BIOS_Module__state__V");
 #pragma DATA_SECTION(ti_sysbios_family_arm_m3_Hwi_Module__state__V, ".data:ti_sysbios_family_arm_m3_Hwi_Module__state__V");
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__state__V, ".data:ti_sysbios_family_arm_m3_Timer_Module__state__V");
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__state__V, ".data:ti_sysbios_family_arm_m3_TimestampProvider_Module__state__V");
 #pragma DATA_SECTION(ti_sysbios_family_arm_cc26xx_Timer_Module__state__V, ".data:ti_sysbios_family_arm_cc26xx_Timer_Module__state__V");
 #pragma DATA_SECTION(ti_sysbios_family_arm_cc26xx_TimestampProvider_Module__state__V, ".data:ti_sysbios_family_arm_cc26xx_TimestampProvider_Module__state__V");
 
@@ -2908,7 +3007,7 @@ __FAR__ const CT__ti_sysbios_family_arm_cc26xx_Boot_Module__gatePrms ti_sysbios_
 
 /* Module__id__C */
 #pragma DATA_SECTION(ti_sysbios_family_arm_cc26xx_Boot_Module__id__C, ".const:ti_sysbios_family_arm_cc26xx_Boot_Module__id__C");
-__FAR__ const CT__ti_sysbios_family_arm_cc26xx_Boot_Module__id ti_sysbios_family_arm_cc26xx_Boot_Module__id__C = (xdc_Bits16)0x28;
+__FAR__ const CT__ti_sysbios_family_arm_cc26xx_Boot_Module__id ti_sysbios_family_arm_cc26xx_Boot_Module__id__C = (xdc_Bits16)0x2a;
 
 /* Module__loggerDefined__C */
 #pragma DATA_SECTION(ti_sysbios_family_arm_cc26xx_Boot_Module__loggerDefined__C, ".const:ti_sysbios_family_arm_cc26xx_Boot_Module__loggerDefined__C");
@@ -3007,7 +3106,7 @@ ti_sysbios_family_arm_cc26xx_Timer_Object__ ti_sysbios_family_arm_cc26xx_Timer_O
             (xdc_Bits32)0x0,  /* hi */
             (xdc_Bits32)0x10000,  /* lo */
         },  /* frequency */
-        (ti_sysbios_family_arm_m3_Hwi_Handle)&ti_sysbios_family_arm_m3_Hwi_Object__table__V[0],  /* hwi */
+        (ti_sysbios_family_arm_m3_Hwi_Handle)&ti_sysbios_family_arm_m3_Hwi_Object__table__V[1],  /* hwi */
         (xdc_UInt64)0xa7c5,  /* period64 */
         (xdc_UInt64)0x0,  /* savedCurrCount */
         (xdc_UInt64)0xa7c5,  /* prevThreshold */
@@ -3051,7 +3150,7 @@ __FAR__ const CT__ti_sysbios_family_arm_cc26xx_Timer_Module__gatePrms ti_sysbios
 
 /* Module__id__C */
 #pragma DATA_SECTION(ti_sysbios_family_arm_cc26xx_Timer_Module__id__C, ".const:ti_sysbios_family_arm_cc26xx_Timer_Module__id__C");
-__FAR__ const CT__ti_sysbios_family_arm_cc26xx_Timer_Module__id ti_sysbios_family_arm_cc26xx_Timer_Module__id__C = (xdc_Bits16)0x29;
+__FAR__ const CT__ti_sysbios_family_arm_cc26xx_Timer_Module__id ti_sysbios_family_arm_cc26xx_Timer_Module__id__C = (xdc_Bits16)0x2b;
 
 /* Module__loggerDefined__C */
 #pragma DATA_SECTION(ti_sysbios_family_arm_cc26xx_Timer_Module__loggerDefined__C, ".const:ti_sysbios_family_arm_cc26xx_Timer_Module__loggerDefined__C");
@@ -3169,7 +3268,7 @@ __FAR__ const CT__ti_sysbios_family_arm_cc26xx_TimestampProvider_Module__gatePrm
 
 /* Module__id__C */
 #pragma DATA_SECTION(ti_sysbios_family_arm_cc26xx_TimestampProvider_Module__id__C, ".const:ti_sysbios_family_arm_cc26xx_TimestampProvider_Module__id__C");
-__FAR__ const CT__ti_sysbios_family_arm_cc26xx_TimestampProvider_Module__id ti_sysbios_family_arm_cc26xx_TimestampProvider_Module__id__C = (xdc_Bits16)0x2a;
+__FAR__ const CT__ti_sysbios_family_arm_cc26xx_TimestampProvider_Module__id ti_sysbios_family_arm_cc26xx_TimestampProvider_Module__id__C = (xdc_Bits16)0x2c;
 
 /* Module__loggerDefined__C */
 #pragma DATA_SECTION(ti_sysbios_family_arm_cc26xx_TimestampProvider_Module__loggerDefined__C, ".const:ti_sysbios_family_arm_cc26xx_TimestampProvider_Module__loggerDefined__C");
@@ -3259,8 +3358,17 @@ ti_sysbios_family_arm_m3_Hwi_Module__ ti_sysbios_family_arm_m3_Hwi_Module__root_
 };
 
 /* Object__table__V */
-ti_sysbios_family_arm_m3_Hwi_Object__ ti_sysbios_family_arm_m3_Hwi_Object__table__V[1] = {
+ti_sysbios_family_arm_m3_Hwi_Object__ ti_sysbios_family_arm_m3_Hwi_Object__table__V[2] = {
     {/* instance#0 */
+        0,
+        ((xdc_UArg)((void*)(ti_sysbios_family_arm_m3_Timer_Handle)&ti_sysbios_family_arm_m3_Timer_Object__table__V[0])),  /* arg */
+        ((xdc_Void(*)(xdc_UArg))((xdc_Fxn)ti_sysbios_family_arm_m3_Timer_periodicStub__I)),  /* fxn */
+        ((xdc_UArg)(0x3)),  /* irp */
+        (xdc_UInt8)0xff,  /* priority */
+        (xdc_Int16)0xf,  /* intNum */
+        ((void*)0),  /* hookEnv */
+    },
+    {/* instance#1 */
         0,
         ((xdc_UArg)(0x0)),  /* arg */
         ((xdc_Void(*)(xdc_UArg))((xdc_Fxn)ti_sysbios_family_arm_cc26xx_Timer_dynamicStub__E)),  /* fxn */
@@ -3376,7 +3484,7 @@ __FAR__ const CT__ti_sysbios_family_arm_m3_Hwi_Module__startupDoneFxn ti_sysbios
 
 /* Object__count__C */
 #pragma DATA_SECTION(ti_sysbios_family_arm_m3_Hwi_Object__count__C, ".const:ti_sysbios_family_arm_m3_Hwi_Object__count__C");
-__FAR__ const CT__ti_sysbios_family_arm_m3_Hwi_Object__count ti_sysbios_family_arm_m3_Hwi_Object__count__C = 1;
+__FAR__ const CT__ti_sysbios_family_arm_m3_Hwi_Object__count ti_sysbios_family_arm_m3_Hwi_Object__count__C = 2;
 
 /* Object__heap__C */
 #pragma DATA_SECTION(ti_sysbios_family_arm_m3_Hwi_Object__heap__C, ".const:ti_sysbios_family_arm_m3_Hwi_Object__heap__C");
@@ -3690,6 +3798,265 @@ __FAR__ const CT__ti_sysbios_family_arm_m3_TaskSupport_stackAlignment ti_sysbios
 
 
 /*
+ * ======== ti.sysbios.family.arm.m3.Timer INITIALIZERS ========
+ */
+
+/* Object__DESC__C */
+__FAR__ const xdc_runtime_Core_ObjDesc ti_sysbios_family_arm_m3_Timer_Object__DESC__C;
+
+/* Object__PARAMS__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Object__PARAMS__C, ".const:ti_sysbios_family_arm_m3_Timer_Object__PARAMS__C");
+__FAR__ const ti_sysbios_family_arm_m3_Timer_Params ti_sysbios_family_arm_m3_Timer_Object__PARAMS__C = {
+    sizeof (ti_sysbios_family_arm_m3_Timer_Params), /* __size */
+    0, /* __self */
+    0, /* __fxns */
+    (xdc_runtime_IInstance_Params*)&ti_sysbios_family_arm_m3_Timer_Object__PARAMS__C.__iprms, /* instance */
+    ti_sysbios_interfaces_ITimer_RunMode_CONTINUOUS,  /* runMode */
+    ti_sysbios_interfaces_ITimer_StartMode_AUTO,  /* startMode */
+    ((xdc_UArg)0),  /* arg */
+    (xdc_UInt32)0x0,  /* period */
+    ti_sysbios_interfaces_ITimer_PeriodType_MICROSECS,  /* periodType */
+    {
+        (xdc_Bits32)0x0,  /* hi */
+        (xdc_Bits32)0x0,  /* lo */
+    },  /* extFreq */
+    ((ti_sysbios_family_arm_m3_Hwi_Params*)0),  /* hwiParams */
+    {
+        sizeof (xdc_runtime_IInstance_Params), /* __size */
+        0,  /* name */
+    },  /* instance */
+};
+
+/* Module__root__V */
+ti_sysbios_family_arm_m3_Timer_Module__ ti_sysbios_family_arm_m3_Timer_Module__root__V = {
+    {&ti_sysbios_family_arm_m3_Timer_Module__root__V.link,  /* link.next */
+    &ti_sysbios_family_arm_m3_Timer_Module__root__V.link},  /* link.prev */
+};
+
+/* Object__table__V */
+ti_sysbios_family_arm_m3_Timer_Object__ ti_sysbios_family_arm_m3_Timer_Object__table__V[1] = {
+    {/* instance#0 */
+        0,
+        1,  /* staticInst */
+        (xdc_Int)0x0,  /* id */
+        ti_sysbios_interfaces_ITimer_RunMode_CONTINUOUS,  /* runMode */
+        ti_sysbios_interfaces_ITimer_StartMode_USER,  /* startMode */
+        (xdc_UInt)0xffffff,  /* period */
+        ti_sysbios_interfaces_ITimer_PeriodType_COUNTS,  /* periodType */
+        (xdc_UInt)0xf,  /* intNum */
+        ((xdc_UArg)0),  /* arg */
+        ((xdc_Void(*)(xdc_UArg))((xdc_Fxn)ti_sysbios_family_arm_m3_TimestampProvider_rolloverFunc__E)),  /* tickFxn */
+        {
+            (xdc_Bits32)0x0,  /* hi */
+            (xdc_Bits32)0x0,  /* lo */
+        },  /* extFreq */
+        (ti_sysbios_family_arm_m3_Hwi_Handle)&ti_sysbios_family_arm_m3_Hwi_Object__table__V[0],  /* hwi */
+    },
+};
+
+/* Module__state__V */
+#if defined (__ICCARM__)
+#pragma location = ".data_ti_sysbios_family_arm_m3_Timer_Module__state__V"
+#endif
+#if defined(__GNUC__) && !(defined(__MACH__) && defined(__APPLE__))
+#ifndef __TI_COMPILER_VERSION__
+ti_sysbios_family_arm_m3_Timer_Module_State__ ti_sysbios_family_arm_m3_Timer_Module__state__V __attribute__ ((section(".data_ti_sysbios_family_arm_m3_Timer_Module__state__V")));
+#endif
+#endif
+ti_sysbios_family_arm_m3_Timer_Module_State__ ti_sysbios_family_arm_m3_Timer_Module__state__V = {
+    (xdc_UInt)0x0,  /* tickCount */
+    (xdc_UInt)0x0,  /* availMask */
+    (ti_sysbios_family_arm_m3_Timer_Handle)&ti_sysbios_family_arm_m3_Timer_Object__table__V[0],  /* handle */
+};
+
+/* Module__diagsEnabled__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__diagsEnabled__C, ".const:ti_sysbios_family_arm_m3_Timer_Module__diagsEnabled__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Module__diagsEnabled ti_sysbios_family_arm_m3_Timer_Module__diagsEnabled__C = (xdc_Bits32)0x90;
+
+/* Module__diagsIncluded__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__diagsIncluded__C, ".const:ti_sysbios_family_arm_m3_Timer_Module__diagsIncluded__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Module__diagsIncluded ti_sysbios_family_arm_m3_Timer_Module__diagsIncluded__C = (xdc_Bits32)0x90;
+
+/* Module__diagsMask__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__diagsMask__C, ".const:ti_sysbios_family_arm_m3_Timer_Module__diagsMask__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Module__diagsMask ti_sysbios_family_arm_m3_Timer_Module__diagsMask__C = ((CT__ti_sysbios_family_arm_m3_Timer_Module__diagsMask)0);
+
+/* Module__gateObj__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__gateObj__C, ".const:ti_sysbios_family_arm_m3_Timer_Module__gateObj__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Module__gateObj ti_sysbios_family_arm_m3_Timer_Module__gateObj__C = ((CT__ti_sysbios_family_arm_m3_Timer_Module__gateObj)0);
+
+/* Module__gatePrms__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__gatePrms__C, ".const:ti_sysbios_family_arm_m3_Timer_Module__gatePrms__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Module__gatePrms ti_sysbios_family_arm_m3_Timer_Module__gatePrms__C = ((CT__ti_sysbios_family_arm_m3_Timer_Module__gatePrms)0);
+
+/* Module__id__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__id__C, ".const:ti_sysbios_family_arm_m3_Timer_Module__id__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Module__id ti_sysbios_family_arm_m3_Timer_Module__id__C = (xdc_Bits16)0x28;
+
+/* Module__loggerDefined__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__loggerDefined__C, ".const:ti_sysbios_family_arm_m3_Timer_Module__loggerDefined__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Module__loggerDefined ti_sysbios_family_arm_m3_Timer_Module__loggerDefined__C = 0;
+
+/* Module__loggerObj__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__loggerObj__C, ".const:ti_sysbios_family_arm_m3_Timer_Module__loggerObj__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Module__loggerObj ti_sysbios_family_arm_m3_Timer_Module__loggerObj__C = ((CT__ti_sysbios_family_arm_m3_Timer_Module__loggerObj)0);
+
+/* Module__loggerFxn0__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__loggerFxn0__C, ".const:ti_sysbios_family_arm_m3_Timer_Module__loggerFxn0__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Module__loggerFxn0 ti_sysbios_family_arm_m3_Timer_Module__loggerFxn0__C = ((CT__ti_sysbios_family_arm_m3_Timer_Module__loggerFxn0)0);
+
+/* Module__loggerFxn1__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__loggerFxn1__C, ".const:ti_sysbios_family_arm_m3_Timer_Module__loggerFxn1__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Module__loggerFxn1 ti_sysbios_family_arm_m3_Timer_Module__loggerFxn1__C = ((CT__ti_sysbios_family_arm_m3_Timer_Module__loggerFxn1)0);
+
+/* Module__loggerFxn2__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__loggerFxn2__C, ".const:ti_sysbios_family_arm_m3_Timer_Module__loggerFxn2__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Module__loggerFxn2 ti_sysbios_family_arm_m3_Timer_Module__loggerFxn2__C = ((CT__ti_sysbios_family_arm_m3_Timer_Module__loggerFxn2)0);
+
+/* Module__loggerFxn4__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__loggerFxn4__C, ".const:ti_sysbios_family_arm_m3_Timer_Module__loggerFxn4__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Module__loggerFxn4 ti_sysbios_family_arm_m3_Timer_Module__loggerFxn4__C = ((CT__ti_sysbios_family_arm_m3_Timer_Module__loggerFxn4)0);
+
+/* Module__loggerFxn8__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__loggerFxn8__C, ".const:ti_sysbios_family_arm_m3_Timer_Module__loggerFxn8__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Module__loggerFxn8 ti_sysbios_family_arm_m3_Timer_Module__loggerFxn8__C = ((CT__ti_sysbios_family_arm_m3_Timer_Module__loggerFxn8)0);
+
+/* Module__startupDoneFxn__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Module__startupDoneFxn__C, ".const:ti_sysbios_family_arm_m3_Timer_Module__startupDoneFxn__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Module__startupDoneFxn ti_sysbios_family_arm_m3_Timer_Module__startupDoneFxn__C = ((CT__ti_sysbios_family_arm_m3_Timer_Module__startupDoneFxn)0);
+
+/* Object__count__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Object__count__C, ".const:ti_sysbios_family_arm_m3_Timer_Object__count__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Object__count ti_sysbios_family_arm_m3_Timer_Object__count__C = 1;
+
+/* Object__heap__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Object__heap__C, ".const:ti_sysbios_family_arm_m3_Timer_Object__heap__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Object__heap ti_sysbios_family_arm_m3_Timer_Object__heap__C = 0;
+
+/* Object__sizeof__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Object__sizeof__C, ".const:ti_sysbios_family_arm_m3_Timer_Object__sizeof__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Object__sizeof ti_sysbios_family_arm_m3_Timer_Object__sizeof__C = sizeof(ti_sysbios_family_arm_m3_Timer_Object__);
+
+/* Object__table__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Object__table__C, ".const:ti_sysbios_family_arm_m3_Timer_Object__table__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_Object__table ti_sysbios_family_arm_m3_Timer_Object__table__C = ti_sysbios_family_arm_m3_Timer_Object__table__V;
+
+/* E_invalidTimer__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_E_invalidTimer__C, ".const:ti_sysbios_family_arm_m3_Timer_E_invalidTimer__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_E_invalidTimer ti_sysbios_family_arm_m3_Timer_E_invalidTimer__C = (((xdc_runtime_Error_Id)26) << 16 | 0);
+
+/* E_notAvailable__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_E_notAvailable__C, ".const:ti_sysbios_family_arm_m3_Timer_E_notAvailable__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_E_notAvailable ti_sysbios_family_arm_m3_Timer_E_notAvailable__C = (((xdc_runtime_Error_Id)27) << 16 | 0);
+
+/* E_cannotSupport__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_E_cannotSupport__C, ".const:ti_sysbios_family_arm_m3_Timer_E_cannotSupport__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_E_cannotSupport ti_sysbios_family_arm_m3_Timer_E_cannotSupport__C = (((xdc_runtime_Error_Id)28) << 16 | 0);
+
+/* anyMask__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_anyMask__C, ".const:ti_sysbios_family_arm_m3_Timer_anyMask__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_anyMask ti_sysbios_family_arm_m3_Timer_anyMask__C = (xdc_UInt)0x1;
+
+/* startupNeeded__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_startupNeeded__C, ".const:ti_sysbios_family_arm_m3_Timer_startupNeeded__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_Timer_startupNeeded ti_sysbios_family_arm_m3_Timer_startupNeeded__C = (xdc_UInt)0x1;
+
+
+/*
+ * ======== ti.sysbios.family.arm.m3.TimestampProvider INITIALIZERS ========
+ */
+
+/* Module__state__V */
+#if defined (__ICCARM__)
+#pragma location = ".data_ti_sysbios_family_arm_m3_TimestampProvider_Module__state__V"
+#endif
+#if defined(__GNUC__) && !(defined(__MACH__) && defined(__APPLE__))
+#ifndef __TI_COMPILER_VERSION__
+ti_sysbios_family_arm_m3_TimestampProvider_Module_State__ ti_sysbios_family_arm_m3_TimestampProvider_Module__state__V __attribute__ ((section(".data_ti_sysbios_family_arm_m3_TimestampProvider_Module__state__V")));
+#endif
+#endif
+ti_sysbios_family_arm_m3_TimestampProvider_Module_State__ ti_sysbios_family_arm_m3_TimestampProvider_Module__state__V = {
+    (ti_sysbios_family_arm_m3_Timer_Handle)&ti_sysbios_family_arm_m3_Timer_Object__table__V[0],  /* timer */
+};
+
+/* Module__diagsEnabled__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__diagsEnabled__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Module__diagsEnabled__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__diagsEnabled ti_sysbios_family_arm_m3_TimestampProvider_Module__diagsEnabled__C = (xdc_Bits32)0x10;
+
+/* Module__diagsIncluded__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__diagsIncluded__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Module__diagsIncluded__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__diagsIncluded ti_sysbios_family_arm_m3_TimestampProvider_Module__diagsIncluded__C = (xdc_Bits32)0x10;
+
+/* Module__diagsMask__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__diagsMask__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Module__diagsMask__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__diagsMask ti_sysbios_family_arm_m3_TimestampProvider_Module__diagsMask__C = ((CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__diagsMask)0);
+
+/* Module__gateObj__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__gateObj__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Module__gateObj__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__gateObj ti_sysbios_family_arm_m3_TimestampProvider_Module__gateObj__C = ((CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__gateObj)0);
+
+/* Module__gatePrms__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__gatePrms__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Module__gatePrms__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__gatePrms ti_sysbios_family_arm_m3_TimestampProvider_Module__gatePrms__C = ((CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__gatePrms)0);
+
+/* Module__id__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__id__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Module__id__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__id ti_sysbios_family_arm_m3_TimestampProvider_Module__id__C = (xdc_Bits16)0x29;
+
+/* Module__loggerDefined__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerDefined__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerDefined__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerDefined ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerDefined__C = 0;
+
+/* Module__loggerObj__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerObj__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerObj__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerObj ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerObj__C = ((CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerObj)0);
+
+/* Module__loggerFxn0__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn0__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn0__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn0 ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn0__C = ((CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn0)0);
+
+/* Module__loggerFxn1__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn1__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn1__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn1 ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn1__C = ((CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn1)0);
+
+/* Module__loggerFxn2__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn2__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn2__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn2 ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn2__C = ((CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn2)0);
+
+/* Module__loggerFxn4__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn4__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn4__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn4 ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn4__C = ((CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn4)0);
+
+/* Module__loggerFxn8__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn8__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn8__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn8 ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn8__C = ((CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__loggerFxn8)0);
+
+/* Module__startupDoneFxn__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Module__startupDoneFxn__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Module__startupDoneFxn__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__startupDoneFxn ti_sysbios_family_arm_m3_TimestampProvider_Module__startupDoneFxn__C = ((CT__ti_sysbios_family_arm_m3_TimestampProvider_Module__startupDoneFxn)0);
+
+/* Object__count__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Object__count__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Object__count__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Object__count ti_sysbios_family_arm_m3_TimestampProvider_Object__count__C = 0;
+
+/* Object__heap__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Object__heap__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Object__heap__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Object__heap ti_sysbios_family_arm_m3_TimestampProvider_Object__heap__C = 0;
+
+/* Object__sizeof__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Object__sizeof__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Object__sizeof__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Object__sizeof ti_sysbios_family_arm_m3_TimestampProvider_Object__sizeof__C = 0;
+
+/* Object__table__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_Object__table__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_Object__table__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_Object__table ti_sysbios_family_arm_m3_TimestampProvider_Object__table__C = 0;
+
+/* configTimer__C */
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_TimestampProvider_configTimer__C, ".const:ti_sysbios_family_arm_m3_TimestampProvider_configTimer__C");
+__FAR__ const CT__ti_sysbios_family_arm_m3_TimestampProvider_configTimer ti_sysbios_family_arm_m3_TimestampProvider_configTimer__C = 0;
+
+
+/*
  * ======== ti.sysbios.gates.GateHwi INITIALIZERS ========
  */
 
@@ -3742,7 +4109,7 @@ __FAR__ const CT__ti_sysbios_gates_GateHwi_Module__gatePrms ti_sysbios_gates_Gat
 
 /* Module__id__C */
 #pragma DATA_SECTION(ti_sysbios_gates_GateHwi_Module__id__C, ".const:ti_sysbios_gates_GateHwi_Module__id__C");
-__FAR__ const CT__ti_sysbios_gates_GateHwi_Module__id ti_sysbios_gates_GateHwi_Module__id__C = (xdc_Bits16)0x2e;
+__FAR__ const CT__ti_sysbios_gates_GateHwi_Module__id ti_sysbios_gates_GateHwi_Module__id__C = (xdc_Bits16)0x30;
 
 /* Module__loggerDefined__C */
 #pragma DATA_SECTION(ti_sysbios_gates_GateHwi_Module__loggerDefined__C, ".const:ti_sysbios_gates_GateHwi_Module__loggerDefined__C");
@@ -3875,7 +4242,7 @@ __FAR__ const CT__ti_sysbios_gates_GateMutex_Module__gatePrms ti_sysbios_gates_G
 
 /* Module__id__C */
 #pragma DATA_SECTION(ti_sysbios_gates_GateMutex_Module__id__C, ".const:ti_sysbios_gates_GateMutex_Module__id__C");
-__FAR__ const CT__ti_sysbios_gates_GateMutex_Module__id ti_sysbios_gates_GateMutex_Module__id__C = (xdc_Bits16)0x2f;
+__FAR__ const CT__ti_sysbios_gates_GateMutex_Module__id ti_sysbios_gates_GateMutex_Module__id__C = (xdc_Bits16)0x31;
 
 /* Module__loggerDefined__C */
 #pragma DATA_SECTION(ti_sysbios_gates_GateMutex_Module__loggerDefined__C, ".const:ti_sysbios_gates_GateMutex_Module__loggerDefined__C");
@@ -3981,7 +4348,7 @@ __FAR__ const CT__ti_sysbios_hal_Hwi_Module__gatePrms ti_sysbios_hal_Hwi_Module_
 
 /* Module__id__C */
 #pragma DATA_SECTION(ti_sysbios_hal_Hwi_Module__id__C, ".const:ti_sysbios_hal_Hwi_Module__id__C");
-__FAR__ const CT__ti_sysbios_hal_Hwi_Module__id ti_sysbios_hal_Hwi_Module__id__C = (xdc_Bits16)0x2b;
+__FAR__ const CT__ti_sysbios_hal_Hwi_Module__id ti_sysbios_hal_Hwi_Module__id__C = (xdc_Bits16)0x2d;
 
 /* Module__loggerDefined__C */
 #pragma DATA_SECTION(ti_sysbios_hal_Hwi_Module__loggerDefined__C, ".const:ti_sysbios_hal_Hwi_Module__loggerDefined__C");
@@ -4123,7 +4490,7 @@ __FAR__ const CT__ti_sysbios_heaps_HeapMem_Module__gatePrms ti_sysbios_heaps_Hea
 
 /* Module__id__C */
 #pragma DATA_SECTION(ti_sysbios_heaps_HeapMem_Module__id__C, ".const:ti_sysbios_heaps_HeapMem_Module__id__C");
-__FAR__ const CT__ti_sysbios_heaps_HeapMem_Module__id ti_sysbios_heaps_HeapMem_Module__id__C = (xdc_Bits16)0x30;
+__FAR__ const CT__ti_sysbios_heaps_HeapMem_Module__id ti_sysbios_heaps_HeapMem_Module__id__C = (xdc_Bits16)0x32;
 
 /* Module__loggerDefined__C */
 #pragma DATA_SECTION(ti_sysbios_heaps_HeapMem_Module__loggerDefined__C, ".const:ti_sysbios_heaps_HeapMem_Module__loggerDefined__C");
@@ -5684,7 +6051,7 @@ __FAR__ const CT__ti_sysbios_rom_cortexm_cc26xx_CC26xx_Module__gatePrms ti_sysbi
 
 /* Module__id__C */
 #pragma DATA_SECTION(ti_sysbios_rom_cortexm_cc26xx_CC26xx_Module__id__C, ".const:ti_sysbios_rom_cortexm_cc26xx_CC26xx_Module__id__C");
-__FAR__ const CT__ti_sysbios_rom_cortexm_cc26xx_CC26xx_Module__id ti_sysbios_rom_cortexm_cc26xx_CC26xx_Module__id__C = (xdc_Bits16)0x2d;
+__FAR__ const CT__ti_sysbios_rom_cortexm_cc26xx_CC26xx_Module__id ti_sysbios_rom_cortexm_cc26xx_CC26xx_Module__id__C = (xdc_Bits16)0x2f;
 
 /* Module__loggerDefined__C */
 #pragma DATA_SECTION(ti_sysbios_rom_cortexm_cc26xx_CC26xx_Module__loggerDefined__C, ".const:ti_sysbios_rom_cortexm_cc26xx_CC26xx_Module__loggerDefined__C");
@@ -6674,9 +7041,15 @@ const __T1_xdc_runtime_Startup_firstFxns xdc_runtime_Startup_firstFxns__A[3] = {
     ((xdc_Void(*)(xdc_Void))((xdc_Fxn)ti_sysbios_hal_Hwi_initStack)),  /* [2] */
 };
 
+/* --> xdc_runtime_Startup_lastFxns__A */
+#pragma DATA_SECTION(xdc_runtime_Startup_lastFxns__A, ".const:xdc_runtime_Startup_lastFxns__A");
+const __T1_xdc_runtime_Startup_lastFxns xdc_runtime_Startup_lastFxns__A[1] = {
+    ((xdc_Void(*)(xdc_Void))((xdc_Fxn)ti_sysbios_family_arm_m3_TimestampProvider_startTimer__E)),  /* [0] */
+};
+
 /* --> xdc_runtime_Startup_sfxnTab__A */
 #pragma DATA_SECTION(xdc_runtime_Startup_sfxnTab__A, ".const:xdc_runtime_Startup_sfxnTab__A");
-const __T1_xdc_runtime_Startup_sfxnTab xdc_runtime_Startup_sfxnTab__A[10] = {
+const __T1_xdc_runtime_Startup_sfxnTab xdc_runtime_Startup_sfxnTab__A[12] = {
     ((xdc_Int(*)(xdc_Int))((xdc_Fxn)xdc_runtime_System_Module_startup__E)),  /* [0] */
     ((xdc_Int(*)(xdc_Int))((xdc_Fxn)xdc_runtime_SysMin_Module_startup__E)),  /* [1] */
     ((xdc_Int(*)(xdc_Int))((xdc_Fxn)ti_sysbios_knl_Clock_Module_startup__E)),  /* [2] */
@@ -6684,14 +7057,16 @@ const __T1_xdc_runtime_Startup_sfxnTab xdc_runtime_Startup_sfxnTab__A[10] = {
     ((xdc_Int(*)(xdc_Int))((xdc_Fxn)ti_sysbios_knl_Swi_Module_startup__E)),  /* [4] */
     ((xdc_Int(*)(xdc_Int))((xdc_Fxn)ti_sysbios_knl_Task_Module_startup__E)),  /* [5] */
     ((xdc_Int(*)(xdc_Int))((xdc_Fxn)ti_sysbios_family_arm_m3_Hwi_Module_startup__E)),  /* [6] */
-    ((xdc_Int(*)(xdc_Int))((xdc_Fxn)ti_sysbios_family_arm_cc26xx_Timer_Module_startup__E)),  /* [7] */
-    ((xdc_Int(*)(xdc_Int))((xdc_Fxn)ti_sysbios_family_arm_cc26xx_TimestampProvider_Module_startup__E)),  /* [8] */
-    ((xdc_Int(*)(xdc_Int))((xdc_Fxn)ti_sysbios_hal_Hwi_Module_startup__E)),  /* [9] */
+    ((xdc_Int(*)(xdc_Int))((xdc_Fxn)ti_sysbios_family_arm_m3_Timer_Module_startup__E)),  /* [7] */
+    ((xdc_Int(*)(xdc_Int))((xdc_Fxn)ti_sysbios_family_arm_m3_TimestampProvider_Module_startup__E)),  /* [8] */
+    ((xdc_Int(*)(xdc_Int))((xdc_Fxn)ti_sysbios_family_arm_cc26xx_Timer_Module_startup__E)),  /* [9] */
+    ((xdc_Int(*)(xdc_Int))((xdc_Fxn)ti_sysbios_family_arm_cc26xx_TimestampProvider_Module_startup__E)),  /* [10] */
+    ((xdc_Int(*)(xdc_Int))((xdc_Fxn)ti_sysbios_hal_Hwi_Module_startup__E)),  /* [11] */
 };
 
 /* --> xdc_runtime_Startup_sfxnRts__A */
 #pragma DATA_SECTION(xdc_runtime_Startup_sfxnRts__A, ".const:xdc_runtime_Startup_sfxnRts__A");
-const __T1_xdc_runtime_Startup_sfxnRts xdc_runtime_Startup_sfxnRts__A[10] = {
+const __T1_xdc_runtime_Startup_sfxnRts xdc_runtime_Startup_sfxnRts__A[12] = {
     1,  /* [0] */
     1,  /* [1] */
     0,  /* [2] */
@@ -6702,6 +7077,8 @@ const __T1_xdc_runtime_Startup_sfxnRts xdc_runtime_Startup_sfxnRts__A[10] = {
     0,  /* [7] */
     1,  /* [8] */
     0,  /* [9] */
+    1,  /* [10] */
+    0,  /* [11] */
 };
 
 /* Module__diagsEnabled__C */
@@ -6786,7 +7163,7 @@ __FAR__ const CT__xdc_runtime_Startup_firstFxns xdc_runtime_Startup_firstFxns__C
 
 /* lastFxns__C */
 #pragma DATA_SECTION(xdc_runtime_Startup_lastFxns__C, ".const:xdc_runtime_Startup_lastFxns__C");
-__FAR__ const CT__xdc_runtime_Startup_lastFxns xdc_runtime_Startup_lastFxns__C = {0, 0};
+__FAR__ const CT__xdc_runtime_Startup_lastFxns xdc_runtime_Startup_lastFxns__C = {1, ((__T1_xdc_runtime_Startup_lastFxns*)xdc_runtime_Startup_lastFxns__A)};
 
 /* startModsFxn__C */
 #pragma DATA_SECTION(xdc_runtime_Startup_startModsFxn__C, ".const:xdc_runtime_Startup_startModsFxn__C");
@@ -7627,6 +8004,25 @@ __FAR__ const xdc_runtime_Core_ObjDesc ti_sysbios_family_arm_m3_Hwi_Object__DESC
 
 
 /*
+ * ======== ti.sysbios.family.arm.m3.Timer OBJECT DESCRIPTOR ========
+ */
+
+/* Object__DESC__C */
+typedef struct { ti_sysbios_family_arm_m3_Timer_Object2__ s0; char c; } ti_sysbios_family_arm_m3_Timer___S1;
+#pragma DATA_SECTION(ti_sysbios_family_arm_m3_Timer_Object__DESC__C, ".const:ti_sysbios_family_arm_m3_Timer_Object__DESC__C");
+__FAR__ const xdc_runtime_Core_ObjDesc ti_sysbios_family_arm_m3_Timer_Object__DESC__C = {
+    (xdc_Ptr)0, /* fxnTab */
+    &ti_sysbios_family_arm_m3_Timer_Module__root__V.link, /* modLink */
+    sizeof(ti_sysbios_family_arm_m3_Timer___S1) - sizeof(ti_sysbios_family_arm_m3_Timer_Object2__), /* objAlign */
+    0, /* objHeap */
+    0, /* objName */
+    sizeof(ti_sysbios_family_arm_m3_Timer_Object2__), /* objSize */
+    (xdc_Ptr)&ti_sysbios_family_arm_m3_Timer_Object__PARAMS__C, /* prmsInit */
+    sizeof(ti_sysbios_family_arm_m3_Timer_Params), /* prmsSize */
+};
+
+
+/*
  * ======== ti.sysbios.gates.GateHwi OBJECT DESCRIPTOR ========
  */
 
@@ -7889,6 +8285,217 @@ xdc_Bool ti_sysbios_family_arm_cc26xx_Boot_Module__startupDone__S( void )
 xdc_Bool ti_sysbios_family_arm_m3_IntrinsicsSupport_Module__startupDone__S( void )
 {
     return 1;
+}
+
+
+
+/*
+ * ======== ti.sysbios.family.arm.m3.Timer SYSTEM FUNCTIONS ========
+ */
+
+/* per-module runtime symbols */
+#undef Module__MID
+#define Module__MID ti_sysbios_family_arm_m3_Timer_Module__id__C
+#undef Module__DGSINCL
+#define Module__DGSINCL ti_sysbios_family_arm_m3_Timer_Module__diagsIncluded__C
+#undef Module__DGSENAB
+#define Module__DGSENAB ti_sysbios_family_arm_m3_Timer_Module__diagsEnabled__C
+#undef Module__DGSMASK
+#define Module__DGSMASK ti_sysbios_family_arm_m3_Timer_Module__diagsMask__C
+#undef Module__LOGDEF
+#define Module__LOGDEF ti_sysbios_family_arm_m3_Timer_Module__loggerDefined__C
+#undef Module__LOGOBJ
+#define Module__LOGOBJ ti_sysbios_family_arm_m3_Timer_Module__loggerObj__C
+#undef Module__LOGFXN0
+#define Module__LOGFXN0 ti_sysbios_family_arm_m3_Timer_Module__loggerFxn0__C
+#undef Module__LOGFXN1
+#define Module__LOGFXN1 ti_sysbios_family_arm_m3_Timer_Module__loggerFxn1__C
+#undef Module__LOGFXN2
+#define Module__LOGFXN2 ti_sysbios_family_arm_m3_Timer_Module__loggerFxn2__C
+#undef Module__LOGFXN4
+#define Module__LOGFXN4 ti_sysbios_family_arm_m3_Timer_Module__loggerFxn4__C
+#undef Module__LOGFXN8
+#define Module__LOGFXN8 ti_sysbios_family_arm_m3_Timer_Module__loggerFxn8__C
+#undef Module__G_OBJ
+#define Module__G_OBJ ti_sysbios_family_arm_m3_Timer_Module__gateObj__C
+#undef Module__G_PRMS
+#define Module__G_PRMS ti_sysbios_family_arm_m3_Timer_Module__gatePrms__C
+#undef Module__GP_create
+#define Module__GP_create ti_sysbios_family_arm_m3_Timer_Module_GateProxy_create
+#undef Module__GP_delete
+#define Module__GP_delete ti_sysbios_family_arm_m3_Timer_Module_GateProxy_delete
+#undef Module__GP_enter
+#define Module__GP_enter ti_sysbios_family_arm_m3_Timer_Module_GateProxy_enter
+#undef Module__GP_leave
+#define Module__GP_leave ti_sysbios_family_arm_m3_Timer_Module_GateProxy_leave
+#undef Module__GP_query
+#define Module__GP_query ti_sysbios_family_arm_m3_Timer_Module_GateProxy_query
+
+/* Module__startupDone__S */
+xdc_Bool ti_sysbios_family_arm_m3_Timer_Module__startupDone__S( void )
+{
+    return ti_sysbios_family_arm_m3_Timer_Module__startupDone__F();
+}
+
+/* Handle__label__S */
+xdc_runtime_Types_Label *ti_sysbios_family_arm_m3_Timer_Handle__label__S(xdc_Ptr obj, xdc_runtime_Types_Label *lab) 
+{
+    lab->handle = obj;
+    lab->modId = 40;
+    xdc_runtime_Core_assignLabel(lab, 0, 0);
+
+    return lab;
+}
+
+/* Params__init__S */
+xdc_Void ti_sysbios_family_arm_m3_Timer_Params__init__S( xdc_Ptr prms, const void *src, xdc_SizeT psz, xdc_SizeT isz ) 
+{
+    xdc_runtime_Core_assignParams__I(prms, (xdc_Ptr)(src ? src : &ti_sysbios_family_arm_m3_Timer_Object__PARAMS__C), psz, isz);
+}
+
+/* Object__get__S */
+xdc_Ptr ti_sysbios_family_arm_m3_Timer_Object__get__S(xdc_Ptr oa, xdc_Int i)
+{
+    if (oa) {
+        return ((ti_sysbios_family_arm_m3_Timer_Object__ *)oa) + i;
+    }
+
+    if (ti_sysbios_family_arm_m3_Timer_Object__count__C == 0) {
+        return NULL;
+    }
+
+    return ((ti_sysbios_family_arm_m3_Timer_Object__ *)ti_sysbios_family_arm_m3_Timer_Object__table__C) + i;
+}
+
+/* Object__first__S */
+xdc_Ptr ti_sysbios_family_arm_m3_Timer_Object__first__S( void ) 
+{
+    xdc_runtime_Types_InstHdr *iHdr = (xdc_runtime_Types_InstHdr *)ti_sysbios_family_arm_m3_Timer_Module__root__V.link.next;
+
+    if (iHdr != (xdc_runtime_Types_InstHdr *)&ti_sysbios_family_arm_m3_Timer_Module__root__V.link) {
+        return iHdr + 1;
+    }
+    else {
+        return NULL;
+    }
+}
+
+/* Object__next__S */
+xdc_Ptr ti_sysbios_family_arm_m3_Timer_Object__next__S( xdc_Ptr obj ) 
+{
+    xdc_runtime_Types_InstHdr *iHdr = ((xdc_runtime_Types_InstHdr *)obj) - 1;
+
+    if (iHdr->link.next != (xdc_runtime_Types_Link *)&ti_sysbios_family_arm_m3_Timer_Module__root__V.link) {
+        return (xdc_runtime_Types_InstHdr *)(iHdr->link.next) + 1;
+    }
+    else {
+        return NULL;
+    }
+}
+
+/* Object__create__S */
+xdc_Ptr ti_sysbios_family_arm_m3_Timer_Object__create__S (
+    xdc_Ptr __obj, 
+    xdc_SizeT __osz,
+    const xdc_Ptr __aa,
+    const ti_sysbios_family_arm_m3_Timer___ParamsPtr __paramsPtr,
+    xdc_SizeT __psz,
+    xdc_runtime_Error_Block *__eb)
+{
+    ti_sysbios_family_arm_m3_Timer_Args__create *__args = __aa;
+    ti_sysbios_family_arm_m3_Timer_Params __prms;
+    ti_sysbios_family_arm_m3_Timer_Object *__newobj;
+    int iStat;
+
+    /* common instance initialization */
+    __newobj = xdc_runtime_Core_createObject__I(&ti_sysbios_family_arm_m3_Timer_Object__DESC__C, __obj, &__prms, (xdc_Ptr)__paramsPtr, sizeof(ti_sysbios_family_arm_m3_Timer_Params), __eb);
+    if (__newobj == NULL) {
+        return NULL;
+    }
+
+    /* module-specific initialization */
+    iStat = ti_sysbios_family_arm_m3_Timer_Instance_init__E(__newobj, __args->id, __args->tickFxn, &__prms, __eb);
+    if (xdc_runtime_Error_check(__eb)) {
+        xdc_runtime_Core_deleteObject__I(&ti_sysbios_family_arm_m3_Timer_Object__DESC__C, __newobj, (xdc_Fxn)ti_sysbios_family_arm_m3_Timer_Instance_finalize__E, iStat, (xdc_Bool)(__obj != NULL));
+        return NULL;
+    }
+
+    return __newobj;
+}
+
+/* create */
+ti_sysbios_family_arm_m3_Timer_Handle ti_sysbios_family_arm_m3_Timer_create( xdc_Int id, ti_sysbios_interfaces_ITimer_FuncPtr tickFxn, const ti_sysbios_family_arm_m3_Timer_Params *__paramsPtr, xdc_runtime_Error_Block *__eb )
+{
+    ti_sysbios_family_arm_m3_Timer_Params __prms;
+    ti_sysbios_family_arm_m3_Timer_Object *__newobj;
+    int iStat;
+
+    /* common instance initialization */
+    __newobj = xdc_runtime_Core_createObject__I(&ti_sysbios_family_arm_m3_Timer_Object__DESC__C, 0, &__prms, (xdc_Ptr)__paramsPtr, sizeof(ti_sysbios_family_arm_m3_Timer_Params), __eb);
+    if (__newobj == NULL) {
+        return NULL;
+    }
+
+    /* module-specific initialization */
+    iStat = ti_sysbios_family_arm_m3_Timer_Instance_init__E(__newobj, id, tickFxn, &__prms, __eb);
+    if (xdc_runtime_Error_check(__eb)) {
+        xdc_runtime_Core_deleteObject__I(&ti_sysbios_family_arm_m3_Timer_Object__DESC__C, __newobj, (xdc_Fxn)ti_sysbios_family_arm_m3_Timer_Instance_finalize__E, iStat, 0);
+        return NULL;
+    }
+
+    return __newobj;
+}
+
+/* construct */
+void ti_sysbios_family_arm_m3_Timer_construct(ti_sysbios_family_arm_m3_Timer_Struct *__obj, xdc_Int id, ti_sysbios_interfaces_ITimer_FuncPtr tickFxn, const ti_sysbios_family_arm_m3_Timer_Params *__paramsPtr, xdc_runtime_Error_Block *__eb )
+{
+    ti_sysbios_family_arm_m3_Timer_Params __prms;
+    int iStat;
+
+    /* common instance initialization */
+    xdc_runtime_Core_constructObject__I(&ti_sysbios_family_arm_m3_Timer_Object__DESC__C, __obj, &__prms, (xdc_Ptr)__paramsPtr, sizeof(ti_sysbios_family_arm_m3_Timer_Params), __eb);
+    /* module-specific initialization */
+    iStat = ti_sysbios_family_arm_m3_Timer_Instance_init__E((xdc_Ptr)__obj, id, tickFxn, &__prms, __eb);
+    if (xdc_runtime_Error_check(__eb)) {
+        xdc_runtime_Core_deleteObject__I(&ti_sysbios_family_arm_m3_Timer_Object__DESC__C, (xdc_Ptr)__obj, (xdc_Fxn)ti_sysbios_family_arm_m3_Timer_Instance_finalize__E, iStat, 1);
+    }
+
+}
+
+/* Object__destruct__S */
+xdc_Void ti_sysbios_family_arm_m3_Timer_Object__destruct__S( xdc_Ptr obj ) 
+{
+    xdc_runtime_Core_deleteObject__I(&ti_sysbios_family_arm_m3_Timer_Object__DESC__C, obj, (xdc_Fxn)ti_sysbios_family_arm_m3_Timer_Instance_finalize__E, 0, TRUE);
+}
+
+/* destruct */
+void ti_sysbios_family_arm_m3_Timer_destruct(ti_sysbios_family_arm_m3_Timer_Struct *obj)
+{
+    ti_sysbios_family_arm_m3_Timer_Object__destruct__S(obj);
+}
+
+/* Object__delete__S */
+xdc_Void ti_sysbios_family_arm_m3_Timer_Object__delete__S( xdc_Ptr instp ) 
+{
+    xdc_runtime_Core_deleteObject__I(&ti_sysbios_family_arm_m3_Timer_Object__DESC__C, *((ti_sysbios_family_arm_m3_Timer_Object**)instp), (xdc_Fxn)ti_sysbios_family_arm_m3_Timer_Instance_finalize__E, 0, FALSE);
+    *((ti_sysbios_family_arm_m3_Timer_Handle*)instp) = NULL;
+}
+
+/* delete */
+void ti_sysbios_family_arm_m3_Timer_delete(ti_sysbios_family_arm_m3_Timer_Handle *instp)
+{
+    ti_sysbios_family_arm_m3_Timer_Object__delete__S(instp);
+}
+
+
+/*
+ * ======== ti.sysbios.family.arm.m3.TimestampProvider SYSTEM FUNCTIONS ========
+ */
+
+/* Module__startupDone__S */
+xdc_Bool ti_sysbios_family_arm_m3_TimestampProvider_Module__startupDone__S( void )
+{
+    return ti_sysbios_family_arm_m3_TimestampProvider_Module__startupDone__F();
 }
 
 

@@ -286,6 +286,12 @@ digraph configuration {
         ti_sysbios_family_arm_m3_TaskSupport [style=filled,fillcolor=lightgray, label="TaskSupport"];
         ti_sysbios_family_arm_m3__top -> ti_sysbios_family_arm_m3_TaskSupport[style=invis];
         ti_sysbios_family_arm_m3_TaskSupport -> ti_sysbios_family_arm_m3__bot[style=invis];
+        ti_sysbios_family_arm_m3_Timer [style=filled,fillcolor=lightgray, label="Timer"];
+        ti_sysbios_family_arm_m3__top -> ti_sysbios_family_arm_m3_Timer[style=invis];
+        ti_sysbios_family_arm_m3_Timer -> ti_sysbios_family_arm_m3__bot[style=invis];
+        ti_sysbios_family_arm_m3_TimestampProvider [style=filled,fillcolor=lightgray, label="TimestampProvider"];
+        ti_sysbios_family_arm_m3__top -> ti_sysbios_family_arm_m3_TimestampProvider[style=invis];
+        ti_sysbios_family_arm_m3_TimestampProvider -> ti_sysbios_family_arm_m3__bot[style=invis];
     }
     subgraph cluster33 {
         label="";
