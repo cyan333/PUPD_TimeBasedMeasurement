@@ -7810,7 +7810,7 @@ __o = __obj[699]  // ti.sysbios.BIOS/configNameMap$/'xdc.runtime/Errors'/fields
 __o = __obj[700]  // ti.sysbios.BIOS/cpuFreq
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.BIOS%2FcpuFreq', 'UTF-8'))
-    __o['hi'] = 32000
+    __o['hi'] = 48000000
     __o['lo'] = 48000000
 
 __o = __obj[701]  // ti.sysbios.BIOS/startupFxns

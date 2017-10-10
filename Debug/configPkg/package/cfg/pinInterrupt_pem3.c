@@ -2840,7 +2840,7 @@ ti_sysbios_BIOS_Module_State__ ti_sysbios_BIOS_Module__state__V __attribute__ ((
 #endif
 ti_sysbios_BIOS_Module_State__ ti_sysbios_BIOS_Module__state__V = {
     {
-        (xdc_Bits32)0x7d00,  /* hi */
+        (xdc_Bits32)0x2dc6c00,  /* hi */
         (xdc_Bits32)0x2dc6c00,  /* lo */
     },  /* cpuFreq */
     (xdc_UInt)0x0,  /* rtsGateCount */
@@ -2931,7 +2931,7 @@ __FAR__ const CT__ti_sysbios_BIOS_smpEnabled ti_sysbios_BIOS_smpEnabled__C = 0;
 /* cpuFreq__C */
 #pragma DATA_SECTION(ti_sysbios_BIOS_cpuFreq__C, ".const:ti_sysbios_BIOS_cpuFreq__C");
 __FAR__ const CT__ti_sysbios_BIOS_cpuFreq ti_sysbios_BIOS_cpuFreq__C = {
-    (xdc_Bits32)0x7d00,  /* hi */
+    (xdc_Bits32)0x2dc6c00,  /* hi */
     (xdc_Bits32)0x2dc6c00,  /* lo */
 };
 
