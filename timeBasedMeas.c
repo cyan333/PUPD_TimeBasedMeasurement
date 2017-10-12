@@ -86,6 +86,8 @@ static uint32_t stop = 0;
 
 static double result[arrayLength] = {0.0,0.0};
 static double time_ratio = 0;
+static double time_to_take_measurement = 0;
+
 
 static uint32_t pin24[100];
 static uint32_t pin25[100];
@@ -176,9 +178,9 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
 //    stop = Timestamp_get32();
     stop = TimestampProvider_get32();
 
-//    Types_FreqHz freq;
+    Types_FreqHz freq;
 //    Timestamp_getFreq(&freq);
-//    TimestampProvider_getFreq((&freq));
+    TimestampProvider_getFreq((&freq));
 
         if ( pinId == Board_DIO23_ANALOG && PIN_getInputValue(pinId)){
             //disable switch pin
@@ -194,9 +196,13 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
             }
             result[index] = stop - start;
 
+            int res = 5059;
+
             if(index > 0){
             time_ratio = result[0]/result[index];
-            printf("%f\n", time_ratio);
+//            printf("%f\n", result[0]);
+            printf("%f\n", (((time_ratio*9970)-res)/res)*100);
+
 //            pin24[counter] = time_ratio;
             }
             CPUdelay(5000*50);
