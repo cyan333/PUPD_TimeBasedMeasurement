@@ -80,6 +80,10 @@ static int index = 0;
 
 static uint32_t start24 = 0;
 static uint32_t start25 = 0;
+
+static uint32_t start = 0;
+static uint32_t stop = 0;
+
 static double result[arrayLength] = {0.0,0.0};
 static double time_ratio = 0;
 
@@ -106,7 +110,7 @@ PIN_Config switchPinTable[] = {
 
 
 PIN_Config VcPinTable[] = {
-    Board_DIO23_ANALOG | PIN_INPUT_EN | PIN_IRQ_POSEDGE,
+    Board_DIO23_ANALOG | PIN_INPUT_EN | PIN_IRQ_BOTHEDGES ,
     PIN_TERMINATE
 };
 
@@ -117,39 +121,39 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
 
 //    if(counter < 1000){
 //        counter++;
-        if ( pinId == Board_DIO23_ANALOG && (PIN_getInputValue(pinId)==0)){
-                switchStatus = PIN_setOutputValue(switchandledPinHandle, charge[index], 1);
-
-//                if (index == 0){
-//                    start24 = TimestampProvider_get32();
+//        if ( pinId == Board_DIO23_ANALOG && (PIN_getInputValue(pinId)==0)){
+//                switchStatus = PIN_setOutputValue(switchandledPinHandle, charge[index], 1);
+//
+////                if (index == 0){
+////                    start24 = TimestampProvider_get32();
+////                }
+////                else if (index == 1){
+////                    start25 = TimestampProvider_get32();
+////                }
+//
+//                if (switchStatus) {
+//                    System_abort("Error disabling charging switch switch\n");
 //                }
-//                else if (index == 1){
-//                    start25 = TimestampProvider_get32();
-//                }
-
-                if (switchStatus) {
-                    System_abort("Error disabling charging switch switch\n");
-                }
-            }
-
-        if ( pinId == Board_DIO23_ANALOG && PIN_getInputValue(pinId)){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, charge[index], 0);
-//            if (index == 0){
-//                pin24[index24] = TimestampProvider_get32() - start24;
-//                index24 = (index24+1)%100;
 //            }
-//            else if (index == 1){
-//                pin25[index25] = TimestampProvider_get32() - start25;
-//                index25 = (index25+1)%100;
+//
+//        if ( pinId == Board_DIO23_ANALOG && PIN_getInputValue(pinId)){
+//            switchStatus = PIN_setOutputValue(switchandledPinHandle, charge[index], 0);
+////            if (index == 0){
+////                pin24[index24] = TimestampProvider_get32() - start24;
+////                index24 = (index24+1)%100;
+////            }
+////            else if (index == 1){
+////                pin25[index25] = TimestampProvider_get32() - start25;
+////                index25 = (index25+1)%100;
+////            }
+//
+//            if (switchStatus) {
+//                System_abort("Error disabling charging switch switch\n");
 //            }
-
-            if (switchStatus) {
-                System_abort("Error disabling charging switch switch\n");
-            }
-
-
-            index = (index+1) % arrayLength;
-        }
+//
+//
+//            index = (index+1) % arrayLength;
+//        }
 //    }
 //    else if (callbackFlag){
 //        callbackFlag = 0;
@@ -169,56 +173,53 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
 
 
 
-
-
-
 //    stop = Timestamp_get32();
-//    stop = TimestampProvider_get32();
+    stop = TimestampProvider_get32();
 
 //    Types_FreqHz freq;
 //    Timestamp_getFreq(&freq);
 //    TimestampProvider_getFreq((&freq));
 
-//    if ( pinId == Board_DIO23_ANALOG && PIN_getInputValue(pinId)){
-//        //disable switch pin
-//        switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 0);
+        if ( pinId == Board_DIO23_ANALOG && PIN_getInputValue(pinId)){
+            //disable switch pin
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 0);
 
 
-//        if (switchStatus) {
-//            System_abort("Error disabling charging switch switch\n");
-//        }
-//        switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO26_ANALOG, 1);
-//        if (switchStatus) {
-//            System_abort("Error enabling discharge switch pin26\n");
-//        }
-//        result[index] = stop - start;
-//
-//        if(index > 0){
-//            time_ratio = result[0]/result[index];
-//            printf("%f\n", time_ratio, freq.lo);
-//
-//        }
-//        CPUdelay(5000*50);
+            if (switchStatus) {
+                System_abort("Error disabling charging switch switch\n");
+            }
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO26_ANALOG, 1);
+            if (switchStatus) {
+                System_abort("Error enabling discharge switch pin26\n");
+            }
+            result[index] = stop - start;
 
-//        switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO26_ANALOG, 0);
-//        if (switchStatus) {
-//            System_abort("Error disabling discharge switch pin26\n");
-//        }
-//        CPUdelay(8000*50);
+            if(index > 0){
+            time_ratio = result[0]/result[index];
+            printf("%f\n", time_ratio);
+//            pin24[counter] = time_ratio;
+            }
+            CPUdelay(5000*50);
 
-//        index = (index+1) % arrayLength; //01010101 / 012012012
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO26_ANALOG, 0);
+            if (switchStatus) {
+                System_abort("Error disabling discharge switch pin26\n");
+            }
+            CPUdelay(800*50);
 
-        //Start Charging
-//        switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 1);
+            index = (index+1) % arrayLength; //01010101 / 012012012
 
-//        start = Timestamp_get32();
-//        start = TimestampProvider_get32();
+            //Start Charging
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 1);
 
-//        if (switchStatus) {
-//            System_abort("Error enabling next charging switch switch\n");
-//        }
+    //        start = Timestamp_get32();
+            start = TimestampProvider_get32();
 
-//    }
+            if (switchStatus) {
+                System_abort("Error enabling next charging switch switch\n");
+            }
+
+        }
 
 }
 
