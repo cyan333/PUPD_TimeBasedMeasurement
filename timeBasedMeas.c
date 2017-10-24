@@ -188,7 +188,6 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
             //disable switch pin
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 0);
 
-
             if (switchStatus) {
                 System_abort("Error disabling charging switch switch\n");
             }
@@ -196,18 +195,29 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
             if (switchStatus) {
                 System_abort("Error enabling discharge switch pin26\n");
             }
-            result[index] = stop - start;
+//            if (index == 1){
+                result[index] = stop - start;
+//                printf("%f\n", result[index]*1000);
+//            }
 
-            int res = 9878;
+//            int res = 99688;    //100k
+//            int res = 80445;    //80k
+//            int res = 29734;    //30k
+//            int res = 9878;     //10kx
+            int res = 8081;     //8k
+//            int res = 2933;     //3k
+//            int res = 989;      //1k
 
             if(index > 0){
             time_ratio = result[0]/result[index];
-//            printf("%f\n", result[0]*1000);
-            printf("%f\n", (((time_ratio*991)-res)/res)*100);
+            printf("%f\n", result[0]*1000);
+//            printf("Rref: %f\n", result[index]*1000);
+//            printf("freq: %d\n", freq.hi);
+            printf("%f\n", (((time_ratio*9862)-res)/res)*100);
 
 //            pin24[counter] = time_ratio;
             }
-            CPUdelay(5000*50);
+            CPUdelay(10000*50);
 
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO26_ANALOG, 0);
             if (switchStatus) {
@@ -221,7 +231,11 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 1);
 
     //        start = Timestamp_get32();
-            start = TimestampProvider_get32();
+
+//            if(index ==0){
+                start = TimestampProvider_get32();
+//            }
+
 
             if (switchStatus) {
                 System_abort("Error enabling next charging switch switch\n");
