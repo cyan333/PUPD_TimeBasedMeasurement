@@ -106,7 +106,6 @@ PIN_Config switchPinTable[] = {
     Board_DIO25_ANALOG | PIN_GPIO_OUTPUT_EN | PIN_GPIO_HIGH | PIN_PUSHPULL | PIN_DRVSTR_MAX,
     Board_DIO26_ANALOG | PIN_GPIO_OUTPUT_DIS | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,
     Board_DIO27_ANALOG | PIN_GPIO_OUTPUT_DIS | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,
-    Board_DIO28_ANALOG | PIN_GPIO_OUTPUT_DIS | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,
 //    Board_LED0 | PIN_GPIO_OUTPUT_DIS | PIN_GPIO_HIGH | PIN_PUSHPULL | PIN_DRVSTR_MAX,
     PIN_TERMINATE
 };
@@ -114,77 +113,25 @@ PIN_Config switchPinTable[] = {
 
 
 PIN_Config VcPinTable[] = {
-    Board_DIO23_ANALOG | PIN_INPUT_EN | PIN_IRQ_BOTHEDGES ,
+    Board_DIO23_ANALOG | PIN_INPUT_EN | PIN_IRQ_POSEDGE ,
     PIN_TERMINATE
 };
 
-
-//static int counter = 0;
-//static int callbackFlag = 1;
+static int isC2on = 0;
+static int ignoreInitialData = 0;
 void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
-//
-//    if(counter < 1000){
-//        counter++;
-//        if ( pinId == Board_DIO23_ANALOG && (PIN_getInputValue(pinId)==0)){
-//                switchStatus = PIN_setOutputValue(switchandledPinHandle, charge[index], 1);
-//
-//                if (index == 0){
-//                    start24 = TimestampProvider_get32();
-//                }
-//                else if (index == 1){
-//                    start25 = TimestampProvider_get32();
-//                }
-//
-//                if (switchStatus) {
-//                    System_abort("Error disabling charging switch switch\n");
-//                }
-//            }
-//
-//        if ( pinId == Board_DIO23_ANALOG && PIN_getInputValue(pinId)){
-//            switchStatus = PIN_setOutputValue(switchandledPinHandle, charge[index], 0);
-//            if (index == 0){
-//                pin24[index24] = TimestampProvider_get32() - start24;
-//                index24 = (index24+1)%100;
-//            }
-//            else if (index == 1){
-//                pin25[index25] = TimestampProvider_get32() - start25;
-//                index25 = (index25+1)%100;
-//            }
-//
-//            if (switchStatus) {
-//                System_abort("Error disabling charging switch switch\n");
-//            }
-//
-//
-//            index = (index+1) % arrayLength;
-//        }
-//    }
-//    else if (callbackFlag){
-//        callbackFlag = 0;
-//        int i;
-//        printf("%d\n", pin24[50]);
-//        for( i = 0; i<100; i++){
-//            printf("%d\n",pin24[i]);
-//        }
-//        printf("--------------------------\n");
-//        for(i = 0; i<100; i++){
-//            printf("%d\n", pin25[i]);
-//        }
-//        System_abort("done\n");
-//        return;
-//    }
 
 
-
-
-//    stop = Timestamp_get32();
     stop = TimestampProvider_get32();
 
-    Types_FreqHz freq;
-//    Timestamp_getFreq(&freq);
-    TimestampProvider_getFreq((&freq));
+//    stop = Timestamp_get32();
+
+
+//    Types_FreqHz freq;
+//    TimestampProvider_getFreq((&freq));
 
         if ( pinId == Board_DIO23_ANALOG && PIN_getInputValue(pinId)){
+
             //disable switch pin
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 0);
 
@@ -199,21 +146,53 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
                 result[index] = stop - start;
 //                printf("%f\n", result[index]*1000);
 //            }
+//
+//
+         if( ignoreInitialData < 5){
+             ignoreInitialData++;
+         }
+         else {
+             if( result[0] < 105000 && isC2on == 0){
+                 switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO27_ANALOG, 1);
+                 printf("C1+C2 \n");
+                 index = 0;
+                 isC2on = 1;
+             //    start = Timestamp_get32();
+                 if (switchStatus) {
+                   System_abort("Error initially enabling pin24\n");
+                 }
+             }
+             else if (result[0] > 730000 && isC2on == 1) {
+                 switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO27_ANALOG, 0);
+                 printf("C1 \n");
+                 index = 0;
+                 isC2on = 0;
+                 //    start = Timestamp_get32();
+                 if (switchStatus) {
+                 System_abort("Error initially enabling pin24\n");
+                 }
+             }
 
+         }
+
+
+             int res = 326911;
 //            int res = 99688;    //100k
 //            int res = 80445;    //80k
 //            int res = 29734;    //30k
 //            int res = 9878;     //10kx
-            int res = 8081;     //8k
-//            int res = 2933;     //3k
+//            int res = 8081;     //8k
+//            int res = 5059;
+//            int res = 2936;     //3k
 //            int res = 989;      //1k
 
             if(index > 0){
             time_ratio = result[0]/result[index];
-            printf("%f\n", result[0]*1000);
+//            printf("%f\n", result[0]*1000);
 //            printf("Rref: %f\n", result[index]*1000);
 //            printf("freq: %d\n", freq.hi);
             printf("%f\n", (((time_ratio*9862)-res)/res)*100);
+//            printf("%f\n", time_ratio*989);
 
 //            pin24[counter] = time_ratio;
             }
@@ -230,7 +209,7 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
             //Start Charging
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[index], 1);
 
-    //        start = Timestamp_get32();
+//            start = Timestamp_get32();
 
 //            if(index ==0){
                 start = TimestampProvider_get32();
@@ -279,16 +258,6 @@ int main(void)
 
     // start timer
 
-    switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO28_ANALOG, 1);
-    //    start = Timestamp_get32();
-        if (switchStatus) {
-            System_abort("Error initially enabling pin24\n");
-        }
-    switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO27_ANALOG, 1);
-        //    start = Timestamp_get32();
-            if (switchStatus) {
-                System_abort("Error initially enabling pin24\n");
-            }
 
 
 
@@ -351,3 +320,54 @@ int main(void)
 
     return (0);
 }
+//
+//    if(counter < 1000){
+//        counter++;
+//        if ( pinId == Board_DIO23_ANALOG && (PIN_getInputValue(pinId)==0)){
+//                switchStatus = PIN_setOutputValue(switchandledPinHandle, charge[index], 1);
+//
+//                if (index == 0){
+//                    start24 = TimestampProvider_get32();
+//                }
+//                else if (index == 1){
+//                    start25 = TimestampProvider_get32();
+//                }
+//
+//                if (switchStatus) {
+//                    System_abort("Error disabling charging switch switch\n");
+//                }
+//            }
+//
+//        if ( pinId == Board_DIO23_ANALOG && PIN_getInputValue(pinId)){
+//            switchStatus = PIN_setOutputValue(switchandledPinHandle, charge[index], 0);
+//            if (index == 0){
+//                pin24[index24] = TimestampProvider_get32() - start24;
+//                index24 = (index24+1)%100;
+//            }
+//            else if (index == 1){
+//                pin25[index25] = TimestampProvider_get32() - start25;
+//                index25 = (index25+1)%100;
+//            }
+//
+//            if (switchStatus) {
+//                System_abort("Error disabling charging switch switch\n");
+//            }
+//
+//
+//            index = (index+1) % arrayLength;
+//        }
+//    }
+//    else if (callbackFlag){
+//        callbackFlag = 0;
+//        int i;
+//        printf("%d\n", pin24[50]);
+//        for( i = 0; i<100; i++){
+//            printf("%d\n",pin24[i]);
+//        }
+//        printf("--------------------------\n");
+//        for(i = 0; i<100; i++){
+//            printf("%d\n", pin25[i]);
+//        }
+//        System_abort("done\n");
+//        return;
+//    }
