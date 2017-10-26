@@ -146,8 +146,8 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
                 result[index] = stop - start;
 //                printf("%f\n", result[index]*1000);
 //            }
-//
-//
+
+
          if( ignoreInitialData < 5){
              ignoreInitialData++;
          }
@@ -176,13 +176,13 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
          }
 
 
-             int res = 326911;
+//             int res = 326911;
 //            int res = 99688;    //100k
 //            int res = 80445;    //80k
 //            int res = 29734;    //30k
 //            int res = 9878;     //10kx
 //            int res = 8081;     //8k
-//            int res = 5059;
+            int res = 5059;
 //            int res = 2936;     //3k
 //            int res = 989;      //1k
 
