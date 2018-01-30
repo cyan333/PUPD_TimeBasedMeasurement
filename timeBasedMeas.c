@@ -78,22 +78,13 @@ static PIN_State ledPinState;
 static int charge[arrayLength] = {Board_DIO24_ANALOG, Board_DIO25_ANALOG};
 static int index = 0;
 
-static uint32_t start24 = 0;
-static uint32_t start25 = 0;
 
 static uint32_t start = 0;
 static uint32_t stop = 0;
 
 static double result[arrayLength] = {0.0,0.0};
 static double time_ratio = 0;
-static double time_to_take_measurement = 0;
 
-
-static uint32_t pin24[100];
-static uint32_t pin25[100];
-
-static int index24 = 0;
-static int index25 = 0;
 
 static double Rfsr;
 
@@ -104,10 +95,10 @@ static double Rfsr;
  */
 PIN_Config switchPinTable[] = {
 
-    Board_DIO24_ANALOG | PIN_GPIO_OUTPUT_EN | PIN_GPIO_HIGH | PIN_PUSHPULL | PIN_DRVSTR_MAX,
-    Board_DIO25_ANALOG | PIN_GPIO_OUTPUT_EN | PIN_GPIO_HIGH | PIN_PUSHPULL | PIN_DRVSTR_MAX,
-    Board_DIO26_ANALOG | PIN_GPIO_OUTPUT_DIS | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,
-    Board_DIO27_ANALOG | PIN_GPIO_OUTPUT_DIS | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,
+    Board_DIO24_ANALOG | PIN_GPIO_OUTPUT_EN | PIN_GPIO_HIGH | PIN_PUSHPULL | PIN_DRVSTR_MAX, //Rfsr
+    Board_DIO25_ANALOG | PIN_GPIO_OUTPUT_EN | PIN_GPIO_HIGH | PIN_PUSHPULL | PIN_DRVSTR_MAX, //Rref1
+    Board_DIO26_ANALOG | PIN_GPIO_OUTPUT_DIS | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX, //discharge
+    Board_DIO27_ANALOG | PIN_GPIO_OUTPUT_DIS | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX, //c2
     Board_DIO30_ANALOG | PIN_GPIO_OUTPUT_DIS | PIN_GPIO_HIGH | PIN_PUSHPULL | PIN_DRVSTR_MAX, //Rref2
 
 //    Board_LED0 | PIN_GPIO_OUTPUT_DIS | PIN_GPIO_HIGH | PIN_PUSHPULL | PIN_DRVSTR_MAX,
@@ -160,7 +151,7 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
          }
          else {
 //             if( result[0] < 60000 && isRref2on == 0){
-             if (Rfsr < 1500 && isRref2on == 0){
+             if (Rfsr < 2500 && isRref2on == 0){
                //turn on C2
 //                  switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO30_ANALOG, 1);
                Rref = 989;
@@ -192,7 +183,7 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
             }
 //
 //             if( result[0] < 105000 && isC2on == 0){
-             if (Rfsr < 8000 && isC2on == 0){
+             if (Rfsr < 80000 && isC2on == 0){
                  switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO27_ANALOG, 1);
                  printf("C1+C2 \n");
                  index = 1;
@@ -203,7 +194,7 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
                  }
              }
 //             else if (result[0] > 500000 && isC2on == 1) {
-             else if (Rfsr > 10000 && isC2on == 1){
+             else if (Rfsr > 100000 && isC2on == 1){
                  switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO27_ANALOG, 0);
                  printf("C1 \n");
                  index = 1;
@@ -219,12 +210,13 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
 //             int res = 817171;
 //             int res = 297299;
 //            int res = 99688;    //100k
-            int res = 80445;    //80k
+//            int res = 80445;    //80k
+//         int res = 81152;
 //            int res = 29734;    //30k
 //         int res = 19786;   //20k
 //            int res = 9878;     //10kx
 //            int res = 8081;     //8k
-//            int res = 5059;
+            int res = 5059;
 //            int res = 2936;     //3k
 //         int res = 1964;  //2k
 //            int res = 989;      //1k
@@ -232,11 +224,12 @@ void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
 
             if(index > 0){
             time_ratio = result[0]/result[index];
+//            printf("time: %f\n", ((result[0]+result[index])*1000)/48000000);
 //            printf("%f\n", result[0]*1000);
 //            printf("Rref: %f\n", result[index]*1000);
 //            printf("freq: %d\n", freq.hi);
-            printf("%f\n", (((time_ratio*Rref)-res)/res)*100);
-//            printf("%f\n", time_ratio*Rref);
+//            printf("Error = %f\n", (((time_ratio*Rref)-res)/res)*100);
+            printf("%f\n", time_ratio*Rref);
 
 //            pin24[counter] = time_ratio;
             }
