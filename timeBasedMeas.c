@@ -116,16 +116,16 @@ static int ignoreInitialData = 0;
  */
 //whichMux = 0 --> Left Mux; 1 --> Top Mux
 void selectMuxPin (int whichCase, int whichMux){
-    switch(whichCase % 2){
+    switch(whichCase){
     case 0:
         if(whichMux == 0){
-            printf("Select: MUX LEFT 000\n");
+            printf("Select: MUX LEFT 0\n");
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 0);
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 0);
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 0);
         }
         else{
-            printf("Select: MUX TOP 000\n");
+            printf("Select: MUX TOP 0\n");
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 0);
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 0);
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 0);
@@ -133,16 +133,100 @@ void selectMuxPin (int whichCase, int whichMux){
         break;
     case 1:
         if(whichMux == 0){
-            printf("Select: MUX LEFT 001\n");
+            printf("Select: MUX LEFT 1\n");
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 0);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 0);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 1);
+        }
+        else{
+            printf("Select: MUX TOP 1\n");
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 0);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 0);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 1);
+        }
+        break;
+    case 2:
+        if(whichMux == 0){
+            printf("Select: MUX LEFT 2\n");
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 0);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 1);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 0);
+        }
+        else{
+            printf("Select: MUX TOP 2\n");
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 0);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 1);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 0);
+        }
+        break;
+    case 3:
+        if(whichMux == 0){
+            printf("Select: MUX LEFT 3\n");
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 0);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 1);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 1);
+        }
+        else{
+            printf("Select: MUX TOP 3\n");
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 0);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 1);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 1);
+        }
+        break;
+    case 4:
+        if(whichMux == 0){
+            printf("Select: MUX LEFT 4\n");
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 1);
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 0);
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 0);
         }
         else{
-            printf("Select: MUX TOP 001\n");
-            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 0);
+            printf("Select: MUX TOP 4\n");
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 1);
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 0);
             switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 0);
+        }
+        break;
+    case 5:
+        if(whichMux == 0){
+            printf("Select: MUX LEFT 5\n");
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 1);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 0);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 1);
+        }
+        else{
+            printf("Select: MUX TOP 5\n");
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 1);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 0);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 1);
+        }
+        break;
+    case 6:
+        if(whichMux == 0){
+            printf("Select: MUX LEFT 6\n");
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 1);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 1);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 0);
+        }
+        else{
+            printf("Select: MUX TOP 6\n");
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 1);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 1);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 0);
+        }
+        break;
+    case 7:
+        if(whichMux == 0){
+            printf("Select: MUX LEFT 7\n");
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 1);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 1);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 1);
+        }
+        else{
+            printf("Select: MUX TOP 7\n");
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 1);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 1);
+            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 1);
         }
         break;
     default:
