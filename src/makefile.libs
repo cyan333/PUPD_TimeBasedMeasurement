@@ -1,6 +1,6 @@
 #
 # This file was generated based on the configuration script:
-#     /Users/Fangming/Documents/PUPD_Project/uC/PUPD_TimeBasedMeasurement/pinInterrupt.cfg
+#     /Users/Fangming/Documents/PUPD_Project/uC/PUPD_TimeBasedMeasurement/timeBaseMeas.cfg
 #
 # This makefile may be included in other makefiles that need to build
 # the libraries containing the compiled source files generated as

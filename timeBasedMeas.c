@@ -493,6 +493,7 @@ int res = 11000;
 //            printf("freq: %d\n", freq.hi);
 //            printf("Error = %f\n", (((time_ratio*Rref)-res)/res)*100);
         printf("%f\n", time_ratio*Rref);
+//        System_flush();
 
 //            pin24[counter] = time_ratio;
         }
@@ -506,16 +507,16 @@ int res = 11000;
 
         whichRtoCharge = (whichRtoCharge+1) % arrayLength; //01010101 / 012012012
 
-        if (whichRtoCharge == 0){
-            if (whichCaseIndex == 7){
-                whichMuxIndex = (whichMuxIndex + 1) % muxAmount;
-                whichCaseIndex = 0;
-            }
-            else {
-                whichCaseIndex = whichCaseIndex +1;
-            }
-            selectMuxPin(whichCaseIndex, whichMuxIndex);
-        }
+//        if (whichRtoCharge == 0){
+//            if (whichCaseIndex == 7){
+//                whichMuxIndex = (whichMuxIndex + 1) % muxAmount;
+//                whichCaseIndex = 0;
+//            }
+//            else {
+//                whichCaseIndex = whichCaseIndex +1;
+//            }
+//            selectMuxPin(whichCaseIndex, whichMuxIndex);
+//        }
 
         //Start Charging
         switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[whichRtoCharge], 1);
