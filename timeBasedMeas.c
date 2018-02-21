@@ -33,8 +33,8 @@
 #define     arrayLength     2
 
 /*MUX Array 8*8*/
-#define     muxLeftLength   8
-#define     muxTopLength    8
+#define     muxLeftLength   2
+#define     muxTopLength    2
 
 #define     muxAmount       2
 
@@ -64,8 +64,11 @@ static int charge[arrayLength] = {Board_DIO24_ANALOG, Board_DIO25_ANALOG};
 static int whichRtoCharge = 0; //0 is Rfsr, 1 is Rref
 
 //2 Mux Array
-//static uint8_t muxLeft[muxLeftLength] = {0,1,2,3,4,5,6,7};
-//static uint8_t muxTop[muxTopLength] = {0,1,2,3,4,5,6,7};
+static uint8_t muxLeft[muxLeftLength] = {0,1};
+static uint8_t muxTop[muxTopLength] = {0,1};
+
+static int i = 0;
+static int j = 0;
 
 static int whichCaseIndex = 0;
 static int whichMuxIndex = 0;
@@ -77,6 +80,8 @@ static double result[arrayLength] = {0.0,0.0};
 static double time_ratio = 0;
 
 static double Rfsr;
+
+static int measureCount = 0;
 
 /*
  * Initial LED pin configuration table
@@ -93,10 +98,10 @@ PIN_Config outputPinTable[] = {
 
     //Mux Pin
     //Left Mux:
-    IOID_13 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX, //A
-    IOID_14 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX, //B
-    IOID_15 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX, //C
-    IOID_7 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX, //En
+    IOID_13 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX, //S1
+    IOID_14 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX, //S2
+    IOID_15 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX, //S3
+    IOID_7 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX, //S1
 
     //Top Mux:
     IOID_6 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX, //A
@@ -130,385 +135,148 @@ void selectMuxPin (int whichCase, int whichMux){
     switch(whichCase){
     case 0:
         if(whichMux == 0){
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 0);  //Enable mux0
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 1); //Disable mux1
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_13, 0);
+            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_13, 1);
             switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_14, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_15, 0);
-        }
-        else if(whichMux == 1){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 0);
 
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_6, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_20, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_19, 0);
         }
+        else{
+            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_15, 1);
+            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 0);
+        }
+        break;
     case 1:
         if(whichMux == 0){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 1);
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_13, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_14, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_15, 1);
-        }
-        else if(whichMux == 1){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 0);
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_6, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_20, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_19, 1);
-        }
-    case 2:
-        if(whichMux == 0){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 1);
-
             switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_13, 0);
             switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_14, 1);
+
+        }
+        else{
             switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_15, 0);
-        }
-        else if(whichMux == 1){
             switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 0);
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_6, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_20, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_19, 0);
         }
-    case 3:
-        if(whichMux == 0){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 1);
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_13, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_14, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_15, 1);
-        }
-        else if(whichMux == 1){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 0);
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_6, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_20, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_19, 1);
-        }
-    case 4:
-        if(whichMux == 0){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 1);
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_13, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_14, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_15, 0);
-        }
-        else if(whichMux == 1){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 0);
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_6, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_20, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_19, 0);
-        }
-    case 5:
-        if(whichMux == 0){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 1);
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_13, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_14, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_15, 1);
-        }
-        else if(whichMux == 1){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 0);
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_6, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_20, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_19, 1);
-        }
-    case 6:
-        if(whichMux == 0){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 1);
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_13, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_14, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_15, 0);
-        }
-        else if(whichMux == 1){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 0);
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_6, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_20, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_19, 0);
-        }
-    case 7:
-        if(whichMux == 0){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 0);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 1);
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_13, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_14, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_15, 1);
-        }
-        else if(whichMux == 1){
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_7, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_18, 0);
-
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_6, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_20, 1);
-            switchStatus = PIN_setOutputValue(switchandledPinHandle, IOID_19, 1);
-        }
+        break;
     }
 
-
-
-//    switch(whichCase){
-//    case 0:
-//        if(whichMux == 0){
-//            printf("Select: MUX LEFT 0\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 0);
-//        }
-//        else{
-//            printf("Select: MUX TOP 0\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 0);
-//        }
-//        break;
-//    case 1:
-//        if(whichMux == 0){
-//            printf("Select: MUX LEFT 1\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 1);
-//        }
-//        else{
-//            printf("Select: MUX TOP 1\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 1);
-//        }
-//        break;
-//    case 2:
-//        if(whichMux == 0){
-//            printf("Select: MUX LEFT 2\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 0);
-//        }
-//        else{
-//            printf("Select: MUX TOP 2\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 0);
-//        }
-//        break;
-//    case 3:
-//        if(whichMux == 0){
-//            printf("Select: MUX LEFT 3\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 1);
-//        }
-//        else{
-//            printf("Select: MUX TOP 3\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 1);
-//        }
-//        break;
-//    case 4:
-//        if(whichMux == 0){
-//            printf("Select: MUX LEFT 4\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 0);
-//        }
-//        else{
-//            printf("Select: MUX TOP 4\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 0);
-//        }
-//        break;
-//    case 5:
-//        if(whichMux == 0){
-//            printf("Select: MUX LEFT 5\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 1);
-//        }
-//        else{
-//            printf("Select: MUX TOP 5\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 0);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 1);
-//        }
-//        break;
-//    case 6:
-//        if(whichMux == 0){
-//            printf("Select: MUX LEFT 6\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 0);
-//        }
-//        else{
-//            printf("Select: MUX TOP 6\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 0);
-//        }
-//        break;
-//    case 7:
-//        if(whichMux == 0){
-//            printf("Select: MUX LEFT 7\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_13, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_14, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_15, 1);
-//        }
-//        else{
-//            printf("Select: MUX TOP 7\n");
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_6, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_20, 1);
-//            switchStatus = PIN_setOutputEnable(switchandledPinHandle, IOID_19, 1);
-//        }
-//        break;
-//    default:
-//        printf("default\n");
-//    }
 }
 
 void dischargeCallbackFxn(PIN_Handle handle, PIN_Id pinId){
+
+    //Record Stop Time
     stop = TimestampProvider_get32();
 
     if ( pinId == Board_DIO23_ANALOG && PIN_getInputValue(pinId)){
-
         //disable switch pin
         switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[whichRtoCharge], 0);
-
         if (switchStatus) {
             System_abort("Error disabling charging switch switch\n");
         }
+
         //Discharge Starts
         switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO26_ANALOG, 1);
         if (switchStatus) {
             System_abort("Error enabling discharge switch pin26\n");
         }
+
         //Calculate Time
         result[whichRtoCharge] = stop - start;
-
         Rfsr = time_ratio*Rref;
 
         //Ignore First xxx data
-         if( ignoreInitialData < 5){
+        if( ignoreInitialData < 5){
              ignoreInitialData++;
-         }
-     else {
-//             if( result[0] < 60000 && isRref2on == 0){
-         if (Rfsr < 2500 && isRref2on == 0){
-           //turn on C2
-//                  switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO30_ANALOG, 1);
-           Rref = 989;
-           charge[1] = Board_DIO30_ANALOG;
-           switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO25_ANALOG, 0);
-           printf("Rref 2 \n");
-           whichRtoCharge = 1;
-           isRref2on = 1;
-           isRref1on = 0;
-           if (switchStatus) {
-             System_abort("Error initially enabling pin24\n");
-           }
-       }
-
-//          if( result[0] > 105000 && isRref1on == 0){
-         if (Rfsr > 8000 && isRref1on == 0){
-            //turn on C2
-//                   switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO25_ANALOG, 1);
-            Rref = 9862;
-            charge[1] = Board_DIO25_ANALOG;  //Rref1 on
-            switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO30_ANALOG, 0);
-            printf("Rref 1 \n");
-            whichRtoCharge = 1;
-            isRref2on = 0;
-            isRref1on = 1;
-            if (switchStatus) {
-              System_abort("Error initially enabling pin24\n");
+        }
+        else {
+            if (Rfsr < 2500 && isRref2on == 0){
+                Rref = 989;
+                charge[1] = Board_DIO30_ANALOG;
+                switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO25_ANALOG, 0);
+                printf("Rref 2 \n");
+                whichRtoCharge = 1;
+                isRref2on = 1;
+                isRref1on = 0;
+                if (switchStatus) {
+                    System_abort("Error initially enabling pin24\n");
+                }
+            }
+            if (Rfsr > 8000 && isRref1on == 0){
+                Rref = 9862;
+                charge[1] = Board_DIO25_ANALOG;  //Rref1 on
+                switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO30_ANALOG, 0);
+                printf("Rref 1 \n");
+                whichRtoCharge = 1;
+                isRref2on = 0;
+                isRref1on = 1;
+                if (switchStatus) {
+                    System_abort("Error initially enabling pin24\n");
+                }
+            }
+            if (Rfsr < 80000 && isC2on == 0){
+                switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO27_ANALOG, 1);
+                printf("C1+C2 \n");
+                whichRtoCharge = 1;
+                isC2on = 1;
+                //                 start = Timestamp_get32();
+                if (switchStatus) {
+                    System_abort("Error initially enabling pin24\n");
+                }
+            }
+            else if (Rfsr > 100000 && isC2on == 1){
+                switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO27_ANALOG, 0);
+                printf("C1 \n");
+                whichRtoCharge = 1;
+                isC2on = 0;
+                if (switchStatus) {
+                    System_abort("Error initially enabling pin24\n");
+                }
             }
         }
-//
-//             if( result[0] < 105000 && isC2on == 0){
-         if (Rfsr < 80000 && isC2on == 0){
-             switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO27_ANALOG, 1);
-             printf("C1+C2 \n");
-             whichRtoCharge = 1;
-             isC2on = 1;
-//                 start = Timestamp_get32();
-             if (switchStatus) {
-               System_abort("Error initially enabling pin24\n");
-             }
-         }
-//             else if (result[0] > 500000 && isC2on == 1) {
-         else if (Rfsr > 100000 && isC2on == 1){
-             switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO27_ANALOG, 0);
-             printf("C1 \n");
-             whichRtoCharge = 1;
-             isC2on = 0;
-//                     start = Timestamp_get32();
-             if (switchStatus) {
-             System_abort("Error initially enabling pin24\n");
-             }
-         }
-//
-     }
 
-//int res = 817171;
-//int res = 297299;
-//int res = 99688;    //100k
-//int res = 80445;    //80k
-//int res = 81152;
-//int res = 29734;    //30k
-//int res = 19786;   //20k
-//int res = 9878;     //10kx
-//int res = 8081;     //8k
-int res = 11000;
-//int res = 2936;     //3k
-//int res = 1964;  //2k
-//int res = 989;      //1k
-//int res = 808;      //800
+        //int res = 817171;
+        //int res = 297299;
+        //int res = 99688;    //100k
+        //int res = 80445;    //80k
+        //int res = 81152;
+        //int res = 29734;    //30k
+        //int res = 19786;   //20k
+        //int res = 9878;     //10kx
+        //int res = 8081;     //8k
+        int res = 11000;
+        //int res = 2936;     //3k
+        //int res = 1964;  //2k
+        //int res = 989;      //1k
+        //int res = 808;      //800
 
         if(whichRtoCharge > 0){
-        time_ratio = result[0]/result[whichRtoCharge];
-//            printf("time: %f\n", ((result[0]+result[index])*1000)/48000000);
-//            printf("%f\n", result[0]*1000);
-//            printf("Rref: %f\n", result[index]*1000);
-//            printf("freq: %d\n", freq.hi);
-//            printf("Error = %f\n", (((time_ratio*Rref)-res)/res)*100);
-        printf("%f\n", time_ratio*Rref);
-//        System_flush();
+            time_ratio = result[0]/result[whichRtoCharge];
+            if(measureCount < 10){
+                measureCount++;
+            }
+            else{
+                measureCount = 0;
+            }
 
-//            pin24[counter] = time_ratio;
+
+            //printf("time: %f\n", ((result[0]+result[index])*1000)/48000000);
+            //printf("%f\n", result[0]*1000);
+            //printf("Rref: %f\n", result[index]*1000);
+            //printf("freq: %d\n", freq.hi);
+            //printf("Error = %f\n", (((time_ratio*Rref)-res)/res)*100);
+            printf("%f\n", time_ratio*Rref);
         }
+
         CPUdelay(10000*50);
 
         switchStatus = PIN_setOutputEnable(switchandledPinHandle, Board_DIO26_ANALOG, 0);
         if (switchStatus) {
             System_abort("Error disabling discharge switch pin26\n");
         }
+
         CPUdelay(800*50);
 
         whichRtoCharge = (whichRtoCharge+1) % arrayLength; //01010101 / 012012012
 
 //        if (whichRtoCharge == 0){
-//            if (whichCaseIndex == 7){
+//            if (whichCaseIndex == 1){
 //                whichMuxIndex = (whichMuxIndex + 1) % muxAmount;
 //                whichCaseIndex = 0;
 //            }
@@ -518,12 +286,31 @@ int res = 11000;
 //            selectMuxPin(whichCaseIndex, whichMuxIndex);
 //        }
 
+        if (whichRtoCharge == 0 && measureCount == 10){
+            if (j == 1){
+                if(i == 1){
+                    printf("donedonedone");
+                    i=0;
+                    j=0;
+                }
+                else{
+                    j = 0;
+                    i = i+1;
+                }
+            }
+            else {
+                j = j+1;
+            }
+            selectMuxPin(muxLeft[i], 0);
+            selectMuxPin(muxTop[j], 1);
+        }
+
         //Start Charging
         switchStatus = PIN_setOutputEnable(switchandledPinHandle, charge[whichRtoCharge], 1);
         start = TimestampProvider_get32();
-         if (switchStatus) {
-                System_abort("Error enabling next charging switch switch\n");
-            }
+        if (switchStatus) {
+            System_abort("Error enabling next charging switch switch\n");
+        }
 
     }
 }
@@ -532,6 +319,7 @@ int res = 11000;
  *  ======== main ========
  */
 int main(void)
+
 {
     /* Call board init functions */
     Board_initGeneral();
